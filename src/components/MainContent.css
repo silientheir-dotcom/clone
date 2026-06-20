@@ -1,0 +1,284 @@
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  background: white;
+  padding: 40px;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 24px 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 16px 12px;
+  }
+}
+
+.main-wrapper {
+  max-width: 1000px;
+}
+
+.content-header {
+  margin-bottom: 32px;
+}
+
+.content-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 12px 0;
+}
+
+.content-header p {
+  font-size: 16px;
+  color: #6b7280;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .content-header h1 {
+    font-size: 24px;
+  }
+
+  .content-header p {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-header h1 {
+    font-size: 20px;
+  }
+
+  .content-header p {
+    font-size: 13px;
+  }
+}
+
+.search-section {
+  margin-bottom: 40px;
+}
+
+@media (max-width: 768px) {
+  .search-section {
+    margin-bottom: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-section {
+    margin-bottom: 20px;
+  }
+}
+
+.search-form {
+  display: flex;
+  gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .search-form {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-form {
+    gap: 8px;
+  }
+}
+
+.search-input-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  transition: border-color 0.2s;
+}
+
+@media (max-width: 768px) {
+  .search-input-wrapper {
+    padding: 10px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-input-wrapper {
+    padding: 8px 12px;
+  }
+}
+
+.search-input-wrapper:focus-within {
+  border-color: #4f46e5;
+}
+
+.search-icon {
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.search-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  color: #1f2937;
+  background: transparent;
+  font-family: inherit;
+}
+
+.search-input::placeholder {
+  color: #9ca3af;
+}
+
+.search-btn {
+  padding: 12px 32px;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .search-btn {
+    padding: 10px 24px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-btn {
+    padding: 8px 16px;
+    font-size: 12px;
+    width: 100%;
+  }
+}
+
+.search-btn:hover {
+  background: #4338ca;
+}
+
+.popular-issues {
+  margin-bottom: 40px;
+}
+
+@media (max-width: 768px) {
+  .popular-issues {
+    margin-bottom: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .popular-issues {
+    margin-bottom: 24px;
+  }
+}
+
+.popular-issues h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 20px 0;
+}
+
+@media (max-width: 768px) {
+  .popular-issues h2 {
+    font-size: 18px;
+    margin: 0 0 16px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .popular-issues h2 {
+    font-size: 16px;
+    margin: 0 0 12px 0;
+  }
+}
+
+.issues-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.security-warning {
+  display: flex;
+  gap: 16px;
+  padding: 20px;
+  background: #ede9fe;
+  border-radius: 12px;
+  border-left: 4px solid #a78bfa;
+  margin-top: 40px;
+}
+
+.warning-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.warning-content {
+  flex: 1;
+}
+
+.warning-content strong {
+  display: block;
+  color: #1f2937;
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.warning-content p {
+  margin: 0;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+@media (max-width: 1024px) {
+  .main-content {
+    padding: 32px;
+  }
+
+  .issues-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 20px;
+  }
+
+  .content-header h1 {
+    font-size: 24px;
+  }
+
+  .search-form {
+    flex-direction: column;
+  }
+
+  .search-btn {
+    width: 100%;
+  }
+
+  .security-warning {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .warning-icon {
+    font-size: 24px;
+  }
+}

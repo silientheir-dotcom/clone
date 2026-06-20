@@ -1,0 +1,245 @@
+.right-sidebar {
+  width: 320px;
+  background: #f9fafb;
+  padding: 24px;
+  border-left: 1px solid #e5e7eb;
+  overflow-y: auto;
+  max-height: calc(100vh - 100px);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+@media (max-width: 1024px) {
+  .right-sidebar {
+    max-height: auto;
+    border-left: none;
+    border-top: 1px solid #e5e7eb;
+  }
+}
+
+@media (max-width: 768px) {
+  .right-sidebar {
+    width: 100%;
+    padding: 20px 16px;
+    gap: 20px;
+    max-height: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .right-sidebar {
+    padding: 16px 12px;
+    gap: 16px;
+  }
+}
+
+.sidebar-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar-section h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+@media (max-width: 480px) {
+  .sidebar-section h3 {
+    font-size: 14px;
+  }
+}
+
+.section-icon {
+  font-size: 18px;
+}
+
+/* Stay Safe Section */
+.safety-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.safety-list li {
+  display: flex;
+  gap: 10px;
+  font-size: 13px;
+  color: #4b5563;
+  line-height: 1.4;
+}
+
+@media (max-width: 480px) {
+  .safety-list li {
+    font-size: 12px;
+  }
+}
+
+.list-icon {
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+/* Official Links Section */
+.links-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.link-btn {
+  padding: 10px 12px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  color: #1f2937;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  text-decoration: none;
+}
+
+@media (max-width: 480px) {
+  .link-btn {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+}
+
+.link-btn:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+/* Help Section */
+.help-section p {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.support-ticket-btn {
+  padding: 10px 12px;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+@media (max-width: 480px) {
+  .support-ticket-btn {
+    padding: 8px 10px;
+    font-size: 12px;
+    width: 100%;
+  }
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.support-ticket-btn:hover {
+  background: #4338ca;
+}
+
+/* Feedback Section */
+.feedback-section p {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.feedback-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.feedback-btn {
+  padding: 10px 12px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.feedback-btn:hover {
+  border-color: #d1d5db;
+  background: #f9fafb;
+}
+
+.feedback-btn.yes {
+  color: #10b981;
+  border-color: #d1fae5;
+}
+
+.feedback-btn.yes:hover {
+  background: #f0fdf4;
+}
+
+.feedback-btn.no {
+  color: #ef4444;
+  border-color: #fee2e2;
+}
+
+.feedback-btn.no:hover {
+  background: #fef2f2;
+}
+
+@media (max-width: 1024px) {
+  .right-sidebar {
+    width: 280px;
+    padding: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .right-sidebar {
+    width: 100%;
+    border-left: none;
+    border-top: 1px solid #e5e7eb;
+    padding: 20px;
+    max-height: none;
+  }
+
+  .sidebar-section {
+    gap: 10px;
+  }
+
+  .links-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .safety-list {
+    gap: 8px;
+  }
+
+  .safety-list li {
+    font-size: 12px;
+  }
+}

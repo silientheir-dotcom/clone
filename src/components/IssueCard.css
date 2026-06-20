@@ -1,0 +1,137 @@
+.issue-card {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 20px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: left;
+  border-left: 4px solid var(--card-color, #4f46e5);
+}
+
+.issue-card:hover {
+  background: #f9fafb;
+  border-color: #d1d5db;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.card-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: rgba(79, 70, 229, 0.1);
+  border-radius: 8px;
+}
+
+.card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+}
+
+.card-description {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.card-duration {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: #6b7280;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.duration-icon {
+  font-size: 14px;
+}
+
+.card-arrow {
+  font-size: 20px;
+  color: #9ca3af;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .issue-card {
+    grid-template-columns: auto 1fr;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .card-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 28px;
+  }
+
+  .card-title {
+    font-size: 15px;
+  }
+
+  .card-description {
+    font-size: 13px;
+  }
+
+  .card-duration,
+  .card-arrow {
+    grid-column: 2;
+  }
+
+  .card-duration {
+    order: 2;
+    font-size: 12px;
+  }
+
+  .card-arrow {
+    order: 3;
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .issue-card {
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    padding: 12px;
+    border-left: 3px solid var(--card-color, #4f46e5);
+  }
+
+  .card-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 24px;
+  }
+
+  .card-title {
+    font-size: 14px;
+  }
+
+  .card-description {
+    font-size: 12px;
+  }
+
+  .card-duration {
+    font-size: 11px;
+  }
+}
