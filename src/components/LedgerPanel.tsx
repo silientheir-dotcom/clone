@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 // 1. Import your local assets here. Adjust extensions (.png/.jpg) if necessary!
 import device1 from '../assets/device1.png'; 

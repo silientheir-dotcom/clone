@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 // Import your local Uniswap logo asset
 import uniswapLogo from '../assets/uniswap.png';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 // Import your local device assets
 import device1 from '../assets/1.png'; // Trezor Safe 5
