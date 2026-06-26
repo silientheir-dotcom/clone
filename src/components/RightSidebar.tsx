@@ -1,77 +1,83 @@
+import React from 'react';
+import moonLogo from '../assets/moon.png';
+
 export default function RightSidebar({ onOpenModal }: { onOpenModal?: () => void }) {
   return (
-    // Changed w-[320px] to w-full and removed "hidden xl:block"
     <aside className="w-full h-full py-6 lg:py-8 px-4 lg:px-6 space-y-6">
       
-      {/* Stay Safe Box */}
-      <section className="bg-white rounded-[20px] p-5 border border-slate-200 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
-        <h3 className="flex items-center gap-2.5 font-bold text-[15px] text-[#1E293B] mb-5">
-          <svg className="w-[20px] h-[20px] text-[#10B981]" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M12 22V2L4 5v7c0 6 8 10 8 10z" fill="currentColor"/>
-          </svg>
-          Stay Safe
-        </h3>
-        <ul className="space-y-4 text-[13px] text-[#64748B] font-medium tracking-tight">
-          <li className="flex gap-3 items-start">
-            <div className="w-[20px] h-[20px] rounded-full bg-[#FEF08A]/80 text-[#EAB308] flex items-center justify-center shrink-0 mt-0.5">
-              <i className="fas fa-exclamation text-[11px] font-bold"></i>
+      {/* Project Info Box */}
+      <section className="bg-white rounded-[20px] p-6 border border-slate-100 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
+        <h3 className="font-bold text-[15px] text-[#1E293B] mb-5">Project Info</h3>
+        
+        <div className="flex items-center gap-4 mb-6">
+          {/* Scaled the logo up using scale-[1.8] inside an overflow-hidden wrapper */}
+          <div className="w-14 h-14 rounded-full bg-[#0B0F19] overflow-hidden flex items-center justify-center shrink-0 shadow-sm border border-slate-100">
+            <img src={moonLogo} alt="MoonRise Finance" className="w-full h-full object-contain scale-[1.8]" />
+          </div>
+          <div>
+            <div className="flex items-center gap-1.5 mb-0.5">
+              <h4 className="font-bold text-[#1E293B] text-[16px]">MoonRise Finance</h4>
+              <i className="fas fa-circle-check text-[#3B82F6] text-[14px]"></i>
             </div>
-            <span className="leading-snug">Admins will never DM you first.</span>
-          </li>
-          <li className="flex gap-3 items-start">
-            <div className="w-[20px] h-[20px] rounded-full bg-[#FFEDD5]/80 text-[#F97316] flex items-center justify-center shrink-0 mt-0.5">
-              <i className="fas fa-key text-[10px]"></i>
-            </div>
-            <span className="leading-snug">Never share your seed phrase or private key.</span>
-          </li>
-          <li className="flex gap-3 items-start">
-            <div className="w-[20px] h-[20px] rounded-full bg-[#D1FAE5]/80 text-[#10B981] flex items-center justify-center shrink-0 mt-0.5">
-              <i className="fas fa-link text-[10px]"></i>
-            </div>
-            <span className="leading-snug">Only use official links from our website and socials.</span>
-          </li>
-          <li className="flex gap-3 items-start">
-            <div className="w-[20px] h-[20px] rounded-full bg-[#EDE9FE]/80 text-[#8B5CF6] flex items-center justify-center shrink-0 mt-0.5">
-              <i className="fas fa-search text-[10px]"></i>
-            </div>
-            <span className="leading-snug">Double-check contract addresses before interacting.</span>
-          </li>
-        </ul>
-      </section>
+            <p className="text-[12px] text-slate-500 font-medium">Building the future of DeFi.</p>
+          </div>
+        </div>
 
-      {/* Links Box */}
-      <section className="bg-white rounded-[20px] p-5 border border-slate-200 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
-        <h3 className="font-bold text-[14px] text-[#1E293B] mb-3">Official Links</h3>
-        <div className="flex flex-col">
+        <div className="flex flex-col space-y-1">
           {[
-            { iconClass: "fas fa-globe", label: 'Website' },
-            { iconClass: "fas fa-book", label: 'Documentation' },
+            { iconClass: "fas fa-globe", label: 'Official Website' },
+            { iconClass: "fas fa-file-alt", label: 'Documentation' },
             { iconClass: "fab fa-twitter", label: 'Twitter / X' },
-            { iconClass: "fab fa-telegram-plane", label: 'Telegram Group' },
-            { iconClass: "fas fa-bell", label: 'Announcements' }
+            { iconClass: "fab fa-telegram-plane", label: 'Telegram Group' }
           ].map(link => (
-            <button key={link.label} className="flex items-center justify-between w-full py-2.5 hover:bg-slate-50 rounded-lg text-[13px] font-medium text-[#64748B] transition-colors text-left group">
+            <button key={link.label} className="flex items-center justify-between w-full py-2.5 px-2 hover:bg-slate-50 rounded-xl text-[13px] font-medium text-[#64748B] transition-colors text-left group">
               <div className="flex items-center gap-3">
                 <i className={`${link.iconClass} w-4 text-center text-slate-400 text-[14px]`}></i>
-                <span>{link.label}</span>
+                <span className="group-hover:text-slate-700 transition-colors">{link.label}</span>
               </div>
-              <i className="fas fa-external-link-alt text-[12px] text-slate-300 group-hover:text-slate-400 transition-colors"></i>
+              <i className="fas fa-external-link-alt text-[11px] text-slate-300 group-hover:text-slate-400 transition-colors"></i>
             </button>
           ))}
         </div>
       </section>
 
-      {/* Ticket Box */}
-      <section className="bg-white rounded-[20px] p-5 border border-slate-200 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
-        <h3 className="font-bold text-[14px] text-[#1E293B] mb-1.5">Can't find a solution?</h3>
-        <p className="text-[12px] text-[#64748B] mb-4 leading-relaxed tracking-tight">Create a support ticket and our team will assist you.</p>
+      {/* Stay Safe Box (Perfect Green Match + Huge Overlapping Shield) */}
+      <section className="bg-[#ECFDF5] rounded-[20px] p-6 border border-[#D1FAE5] shadow-sm relative">
+        
+        {/* Massive overlapping green shield */}
+        <div className="absolute right-[-24px] top-1/2 -translate-y-1/2 w-[72px] h-[72px] bg-[#10B981] rounded-[18px] rotate-12 flex items-center justify-center shadow-lg border-[4px] border-white z-20">
+          <svg className="w-8 h-8 text-white -rotate-12" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M10 1.944A11.954 11.954 0 012.166 5C2.056 5.642 2 6.319 2 7c0 5.225 3.34 9.67 8 11.317C14.66 16.67 18 12.225 18 7c0-.682-.057-1.358-.166-2.001A11.954 11.954 0 0110 1.944zM8.707 13.707a1 1 0 001.414 0l4-4a1 1 0 00-1.414-1.414L9.414 11.586 7.707 9.879a1 1 0 00-1.414 1.414l2 2z" clipRule="evenodd" />
+          </svg>
+        </div>
+
+        <h3 className="font-bold text-[15px] text-[#065F46] mb-4 relative z-10">Stay Safe</h3>
+        
+        <ul className="space-y-4 text-[12px] text-[#047857] font-medium pr-8 relative z-10">
+          <li className="flex gap-2.5 items-start">
+            <i className="fas fa-user-shield mt-0.5 text-[#10B981]"></i>
+            <span className="leading-snug">Admins will never DM you first</span>
+          </li>
+          <li className="flex gap-2.5 items-start">
+            <i className="fas fa-key mt-0.5 text-[#10B981]"></i>
+            <span className="leading-snug">Never share your seed phrase or private key</span>
+          </li>
+          <li className="flex gap-2.5 items-start">
+            <i className="fas fa-link mt-0.5 text-[#10B981]"></i>
+            <span className="leading-snug">Only use official links from our website and socials</span>
+          </li>
+        </ul>
+      </section>
+
+      {/* Need More Help Box */}
+      <section className="bg-white rounded-[20px] p-6 border border-slate-100 shadow-[0_2px_12px_rgba(0,0,0,0.03)] text-center">
+        <h3 className="font-bold text-[16px] text-[#1E293B] mb-2">Need more help?</h3>
+        <p className="text-[13px] text-slate-500 mb-6 leading-relaxed px-2">Can't find your solution? Create a ticket and our team will assist you.</p>
         <button 
           onClick={onOpenModal}
-          className="w-full bg-[#5B62F1] hover:bg-indigo-600 text-white py-2.5 rounded-[12px] text-[13px] font-semibold transition-colors flex justify-center items-center gap-2 shadow-sm"
+          className="w-full bg-white border border-slate-200 hover:border-[#5B62F1] hover:text-[#5B62F1] text-slate-700 py-2.5 rounded-xl text-[13px] font-bold transition-all duration-300 flex justify-center items-center gap-2 shadow-sm"
         >
-          <i className="fas fa-comment-dots text-[14px]"></i>
-          Create Support Ticket
+          <i className="far fa-paper-plane text-[14px]"></i> Create Support Ticket
         </button>
       </section>
       
