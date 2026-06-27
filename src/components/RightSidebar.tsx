@@ -10,13 +10,12 @@ export default function RightSidebar({ onOpenModal }: { onOpenModal?: () => void
         <h3 className="font-bold text-[15px] text-[#1E293B] mb-5">Project Info</h3>
         
         <div className="flex items-center gap-4 mb-6">
-          {/* Scaled the logo up using scale-[1.8] inside an overflow-hidden wrapper */}
-          <div className="w-14 h-14 rounded-full bg-[#0B0F19] overflow-hidden flex items-center justify-center shrink-0 shadow-sm border border-slate-100">
-            <img src={moonLogo} alt="MoonRise Finance" className="w-full h-full object-contain scale-[1.8]" />
-          </div>
+          {/* Raw image, no wrapper to chop it */}
+          <img src={moonLogo} alt="MoonRise Finance" className="w-[56px] h-[56px] object-contain shrink-0" />
+          
           <div>
             <div className="flex items-center gap-1.5 mb-0.5">
-              <h4 className="font-bold text-[#1E293B] text-[16px]">MoonRise Finance</h4>
+              <h4 className="font-bold text-[#1E293B] text-[16px]">Team Finance</h4>
               <i className="fas fa-circle-check text-[#3B82F6] text-[14px]"></i>
             </div>
             <p className="text-[12px] text-slate-500 font-medium">Building the future of DeFi.</p>
@@ -41,10 +40,9 @@ export default function RightSidebar({ onOpenModal }: { onOpenModal?: () => void
         </div>
       </section>
 
-      {/* Stay Safe Box (Perfect Green Match + Huge Overlapping Shield) */}
+      {/* Stay Safe Box */}
       <section className="bg-[#ECFDF5] rounded-[20px] p-6 border border-[#D1FAE5] shadow-sm relative">
         
-        {/* Massive overlapping green shield */}
         <div className="absolute right-[-24px] top-1/2 -translate-y-1/2 w-[72px] h-[72px] bg-[#10B981] rounded-[18px] rotate-12 flex items-center justify-center shadow-lg border-[4px] border-white z-20">
           <svg className="w-8 h-8 text-white -rotate-12" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M10 1.944A11.954 11.954 0 012.166 5C2.056 5.642 2 6.319 2 7c0 5.225 3.34 9.67 8 11.317C14.66 16.67 18 12.225 18 7c0-.682-.057-1.358-.166-2.001A11.954 11.954 0 0110 1.944zM8.707 13.707a1 1 0 001.414 0l4-4a1 1 0 00-1.414-1.414L9.414 11.586 7.707 9.879a1 1 0 00-1.414 1.414l2 2z" clipRule="evenodd" />

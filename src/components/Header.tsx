@@ -21,20 +21,16 @@ export default function Header({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
         </button>
-        {/* Mobile Logo: Cranked to scale-[3] */}
-        <div className="w-8 h-8 rounded-full bg-[#0B0F19] flex items-center justify-center border border-slate-200 shadow-sm shrink-0 overflow-hidden">
-          <img src={moonLogo} alt="MoonRise Finance" className="w-full h-full object-contain scale-[3]" />
-        </div>
+        {/* Mobile Logo: Clean un-chopped image */}
+        <img src={moonLogo} alt="MoonRise Finance" className="w-8 h-8 object-contain shrink-0" />
       </div>
 
       {/* Left Side: Brand Dropdown & Badge (Desktop) */}
       <div className="hidden lg:flex items-center gap-4">
         <button className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-          {/* Desktop Logo: Cranked to scale-[3] */}
-          <div className="w-10 h-10 rounded-full bg-[#0B0F19] flex items-center justify-center border border-slate-200 shadow-sm shrink-0 overflow-hidden">
-            <img src={moonLogo} alt="MoonRise Finance" className="w-full h-full object-contain scale-[3]" />
-          </div>
-          <span className="font-bold text-slate-900 text-[16px] tracking-tight">MoonRise Finance</span>
+          {/* Desktop Logo: Clean un-chopped image */}
+          <img src={moonLogo} alt="MoonRise Finance" className="w-10 h-10 object-contain shrink-0" />
+          <span className="font-bold text-slate-900 text-[16px] tracking-tight">Team Finance</span>
           <i className="fas fa-chevron-down text-[10px] text-slate-500 ml-1"></i>
         </button>
         
