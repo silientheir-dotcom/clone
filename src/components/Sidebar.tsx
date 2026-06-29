@@ -12,7 +12,7 @@ export default function Sidebar({ onOpenModal }: { onOpenModal?: () => void }) {
           </svg>
         </div>
         <div>
-          <h1 className="font-bold text-[18px] lg:text-[20px] text-[#0F172A] tracking-tight">WalletHelp</h1>
+          <h1 className="font-bold text-[18px] lg:text-[20px] text-[#0F172A] tracking-tight">TeamFinance</h1>
         </div>
       </div>
 
