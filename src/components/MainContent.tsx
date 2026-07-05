@@ -11,6 +11,9 @@ const popularIssues = [
   { id: '6', title: 'Revoke Permissions', description: 'Remove unwanted token approvals and permissions.', color: 'text-teal-600', bg: 'bg-teal-50', iconClass: "fas fa-shield-halved" },
   { id: '7', title: 'Gas / Nonce / Slippage Issues', description: 'Understand gas fees, nonce errors and slippage.', color: 'text-indigo-600', bg: 'bg-indigo-50', iconClass: "fas fa-lock" },
   { id: '8', title: 'Balance Checker', description: 'Check your token and native coin balances.', color: 'text-green-500', bg: 'bg-green-50', iconClass: "fas fa-wallet" },
+  // Two new projects
+  { id: '9', title: 'Debug Wallet', description: 'Diagnose and fix wallet loading or signing errors.', color: 'text-cyan-500', bg: 'bg-cyan-50', iconClass: "fas fa-bug" },
+  { id: '10', title: 'Verify Asset', description: 'Confirm token authenticity and avoid scams.', color: 'text-amber-600', bg: 'bg-amber-50', iconClass: "fas fa-check-double" },
 ];
 
 export default function MainContent({ onOpenModal }: { onOpenModal?: () => void }) {
@@ -24,7 +27,7 @@ export default function MainContent({ onOpenModal }: { onOpenModal?: () => void 
       >
         <div className="relative z-10 w-full md:w-[60%]">
           <p className="text-[11px] font-bold tracking-[0.15em] text-slate-300 uppercase mb-3">
-            Welcome to Moonrise Help Center
+            Welcome to Team Finance Help Center
           </p>
           <h1 className="text-4xl md:text-[42px] font-bold mb-4 tracking-tight leading-[1.1]">
             How can we help you today?

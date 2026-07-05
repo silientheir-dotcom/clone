@@ -1,16 +1,13 @@
 import React from 'react';
+import moonLogo from '../assets/moon.png';
 
 export default function Sidebar({ onOpenModal }: { onOpenModal?: () => void }) {
   return (
     <aside className="w-full h-full flex flex-col py-6 lg:py-8 px-4 lg:px-6 border-r border-slate-100 bg-white">
       
-      {/* Title with the proper Shield Logo */}
+      {/* Title with Moon Logo – no background */}
       <div className="mb-8 px-2 flex items-center gap-3">
-        <div className="w-[32px] h-[32px] lg:w-[38px] lg:h-[38px] bg-[#5B62F1] rounded-[8px] lg:rounded-[10px] flex items-center justify-center shrink-0 shadow-sm">
-          <svg className="w-[18px] h-[18px] lg:w-[22px] lg:h-[22px] text-white" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3zm-1.06 13.54L7.4 12l1.41-1.41 2.12 2.12 4.24-4.24 1.41 1.41-5.64 5.66z"/>
-          </svg>
-        </div>
+        <img src={moonLogo} alt="MoonRise Finance" className="w-[32px] h-[32px] lg:w-[38px] lg:h-[38px] object-contain shrink-0" />
         <div>
           <h1 className="font-bold text-[18px] lg:text-[20px] text-[#0F172A] tracking-tight">TeamFinance</h1>
         </div>
