@@ -1,84 +1,100 @@
-import React from 'react';
+import React, { useState } from 'react';
 import moonLogo from '../assets/moon.png';
+import TroubleshooterModal from './TroubleshooterModal'; // adjust the import path as needed
 
-export default function RightSidebar({ onOpenModal }: { onOpenModal?: () => void }) {
+export default function Sidebar({ onOpenModal }: { onOpenModal?: () => void }) {
+  const [showTroubleshooter, setShowTroubleshooter] = useState(false);
+
   return (
-    <aside className="w-full h-full py-6 lg:py-8 px-4 lg:px-6 space-y-6">
-      
-      {/* Project Info Box */}
-      <section className="bg-white rounded-[20px] p-6 border border-slate-100 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
-        <h3 className="font-bold text-[15px] text-[#1E293B] mb-5">Project Info</h3>
+    <>
+      {/* Troubleshooter Modal */}
+      <TroubleshooterModal isOpen={showTroubleshooter} onClose={() => setShowTroubleshooter(false)} />
+
+      <aside className="w-full h-full flex flex-col py-6 lg:py-8 px-4 lg:px-6 border-r border-slate-100 bg-white">
         
-        <div className="flex items-center gap-4 mb-6">
-          {/* Raw image, no wrapper to chop it */}
-          <img src={moonLogo} alt="MoonRise Finance" className="w-[56px] h-[56px] object-contain shrink-0" />
-          
+        {/* Title with Moon Logo */}
+        <div className="mb-8 px-2 flex items-center gap-3">
+          <img src={moonLogo} alt="MoonRise Finance" className="w-[32px] h-[32px] lg:w-[38px] lg:h-[38px] object-contain shrink-0" />
           <div>
-            <div className="flex items-center gap-1.5 mb-0.5">
-              <h4 className="font-bold text-[#1E293B] text-[16px]">Team Finance</h4>
-              <i className="fas fa-circle-check text-[#3B82F6] text-[14px]"></i>
-            </div>
-            <p className="text-[12px] text-slate-500 font-medium">Building the future of DeFi.</p>
+            <h1 className="font-bold text-[18px] lg:text-[20px] text-[#0F172A] tracking-tight">TeamFinance</h1>
           </div>
         </div>
 
-        <div className="flex flex-col space-y-1">
-          {[
-            { iconClass: "fas fa-globe", label: 'Official Website' },
-            { iconClass: "fas fa-file-alt", label: 'Documentation' },
-            { iconClass: "fab fa-twitter", label: 'Twitter / X' },
-            { iconClass: "fab fa-telegram-plane", label: 'Telegram Group' }
-          ].map(link => (
-            <button key={link.label} className="flex items-center justify-between w-full py-2.5 px-2 hover:bg-slate-50 rounded-xl text-[13px] font-medium text-[#64748B] transition-colors text-left group">
-              <div className="flex items-center gap-3">
-                <i className={`${link.iconClass} w-4 text-center text-slate-400 text-[14px]`}></i>
-                <span className="group-hover:text-slate-700 transition-colors">{link.label}</span>
-              </div>
-              <i className="fas fa-external-link-alt text-[11px] text-slate-300 group-hover:text-slate-400 transition-colors"></i>
+        <div className="mb-8 px-2">
+          <p className="text-[12px] text-slate-400 leading-relaxed font-medium">Self-serve wallet troubleshooting<br/>for crypto communities</p>
+        </div>
+
+        <div className="flex flex-col flex-1 overflow-y-auto pr-2">
+          
+          {/* Active Dashboard Link */}
+          <button className="flex items-center gap-3.5 bg-[#EEF0FF] text-[#5B62F1] px-4 py-3 rounded-xl font-bold text-[14px] mb-8 transition-colors">
+            <svg className="w-5 h-5 text-[#5B62F1]" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M11.47 3.84a.75.75 0 011.06 0l8.99 9a.75.75 0 11-1.04 1.08L20 13.43V20a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4h-4v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-6.57l-.48.49a.75.75 0 11-1.04-1.08l8.99-9z" />
+            </svg>
+            Dashboard
+          </button>
+
+          {/* User Experience Section */}
+          <div className="mb-3 px-4">
+            <p className="text-[11px] font-bold text-slate-400 tracking-widest uppercase">User Experience</p>
+          </div>
+          <div className="flex flex-col gap-1 mb-8">
+            <button
+              onClick={() => setShowTroubleshooter(true)}
+              className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group"
+            >
+              <i className="fas fa-tools w-5 text-center text-slate-400 group-hover:text-slate-600 transition-colors"></i> Troubleshooter
             </button>
-          ))}
+            <button className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group">
+              <i className="fas fa-book-open w-5 text-center text-slate-400 group-hover:text-slate-600 transition-colors"></i> Smart Help Center
+            </button>
+            <button className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group">
+              <i className="fas fa-comment-dots w-5 text-center text-slate-400 group-hover:text-slate-600 transition-colors"></i> Error Decoder
+            </button>
+            <button className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group">
+              <i className="fas fa-search w-5 text-center text-slate-400 group-hover:text-slate-600 transition-colors"></i> Check Tools
+            </button>
+          </div>
+
+          {/* Admin Tools Section */}
+          <div className="mb-3 px-4">
+            <p className="text-[11px] font-bold text-slate-400 tracking-widest uppercase">Admin Tools</p>
+          </div>
+          <div className="flex flex-col gap-1">
+            <button className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group">
+              <i className="far fa-comment-alt w-5 text-center text-slate-400 group-hover:text-slate-600 transition-colors"></i> Reply Templates
+            </button>
+            <button className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group">
+              <i className="fas fa-cog w-5 text-center text-slate-400 group-hover:text-slate-600 transition-colors"></i> Project Settings
+            </button>
+            <button className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group">
+              <i className="fas fa-database w-5 text-center text-slate-400 group-hover:text-slate-600 transition-colors"></i> Knowledge Base
+            </button>
+            <button className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group">
+              <i className="fas fa-chart-bar w-5 text-center text-slate-400 group-hover:text-slate-600 transition-colors"></i> Analytics
+            </button>
+            <button className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group">
+              <i className="far fa-user w-5 text-center text-slate-400 group-hover:text-slate-600 transition-colors"></i> Team Members
+            </button>
+          </div>
         </div>
-      </section>
 
-      {/* Stay Safe Box */}
-      <section className="bg-[#ECFDF5] rounded-[20px] p-6 border border-[#D1FAE5] shadow-sm relative">
-        
-        <div className="absolute right-[-24px] top-1/2 -translate-y-1/2 w-[72px] h-[72px] bg-[#10B981] rounded-[18px] rotate-12 flex items-center justify-center shadow-lg border-[4px] border-white z-20">
-          <svg className="w-8 h-8 text-white -rotate-12" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M10 1.944A11.954 11.954 0 012.166 5C2.056 5.642 2 6.319 2 7c0 5.225 3.34 9.67 8 11.317C14.66 16.67 18 12.225 18 7c0-.682-.057-1.358-.166-2.001A11.954 11.954 0 0110 1.944zM8.707 13.707a1 1 0 001.414 0l4-4a1 1 0 00-1.414-1.414L9.414 11.586 7.707 9.879a1 1 0 00-1.414 1.414l2 2z" clipRule="evenodd" />
-          </svg>
+        {/* Need Help Box */}
+        <div className="mt-8 px-2">
+          <div className="flex items-center gap-2 mb-2">
+            <i className="fas fa-headset text-[#5B62F1] text-[16px]"></i>
+            <h4 className="text-[14px] font-bold text-slate-900">Need help?</h4>
+          </div>
+          <p className="text-[12px] text-slate-500 mb-4 leading-relaxed">Our support is here for you</p>
+          <button 
+            onClick={onOpenModal}
+            className="w-full flex items-center justify-center gap-2 py-3 bg-[#5B62F1] hover:bg-indigo-600 text-white text-[13px] font-semibold rounded-lg transition-colors shadow-sm"
+          >
+            Contact Support
+          </button>
         </div>
 
-        <h3 className="font-bold text-[15px] text-[#065F46] mb-4 relative z-10">Stay Safe</h3>
-        
-        <ul className="space-y-4 text-[12px] text-[#047857] font-medium pr-8 relative z-10">
-          <li className="flex gap-2.5 items-start">
-            <i className="fas fa-user-shield mt-0.5 text-[#10B981]"></i>
-            <span className="leading-snug">Admins will never DM you first</span>
-          </li>
-          <li className="flex gap-2.5 items-start">
-            <i className="fas fa-key mt-0.5 text-[#10B981]"></i>
-            <span className="leading-snug">Never share your seed phrase or private key</span>
-          </li>
-          <li className="flex gap-2.5 items-start">
-            <i className="fas fa-link mt-0.5 text-[#10B981]"></i>
-            <span className="leading-snug">Only use official links from our website and socials</span>
-          </li>
-        </ul>
-      </section>
-
-      {/* Need More Help Box */}
-      <section className="bg-white rounded-[20px] p-6 border border-slate-100 shadow-[0_2px_12px_rgba(0,0,0,0.03)] text-center">
-        <h3 className="font-bold text-[16px] text-[#1E293B] mb-2">Need more help?</h3>
-        <p className="text-[13px] text-slate-500 mb-6 leading-relaxed px-2">Can't find your solution? Create a ticket and our team will assist you.</p>
-        <button 
-          onClick={onOpenModal}
-          className="w-full bg-white border border-slate-200 hover:border-[#5B62F1] hover:text-[#5B62F1] text-slate-700 py-2.5 rounded-xl text-[13px] font-bold transition-all duration-300 flex justify-center items-center gap-2 shadow-sm"
-        >
-          <i className="far fa-paper-plane text-[14px]"></i> Create Support Ticket
-        </button>
-      </section>
-      
-    </aside>
+      </aside>
+    </>
   );
 }
