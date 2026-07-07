@@ -1,5 +1,4 @@
 import React from 'react';
-import moonLogo from '../assets/moon.png';
 
 export default function Header({ 
   onToggleLeftMenu,
@@ -11,8 +10,8 @@ export default function Header({
   return (
     <header className="h-[64px] lg:h-[72px] bg-white border-b border-slate-100 px-4 lg:px-8 flex items-center justify-between shrink-0 z-40">
       
-      {/* Mobile Toggles & Logo */}
-      <div className="flex items-center lg:hidden gap-3">
+      {/* Mobile Left: Hamburger ONLY */}
+      <div className="flex items-center lg:hidden">
         <button 
           onClick={onToggleLeftMenu} 
           className="p-2 -ml-2 text-slate-500 hover:bg-slate-50 rounded-lg transition-colors"
@@ -21,23 +20,10 @@ export default function Header({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
         </button>
-        {/* Mobile Logo: Clean un-chopped image */}
-        <img src={moonLogo} alt="MoonRise Finance" className="w-8 h-8 object-contain shrink-0" />
       </div>
 
-      {/* Left Side: Brand Dropdown & Badge (Desktop) */}
-      <div className="hidden lg:flex items-center gap-4">
-        <button className="flex items-center gap-3 hover:opacity-80 transition-opacity">
-          {/* Desktop Logo: Clean un-chopped image */}
-          <img src={moonLogo} alt="MoonRise Finance" className="w-10 h-10 object-contain shrink-0" />
-          <span className="font-bold text-slate-900 text-[16px] tracking-tight">Team Finance</span>
-          <i className="fas fa-chevron-down text-[10px] text-slate-500 ml-1"></i>
-        </button>
-        
-        <div className="px-3 py-1 bg-[#ECFDF5] text-[#10B981] text-[11px] font-bold uppercase tracking-wider rounded-md border border-[#D1FAE5]">
-          Active
-        </div>
-      </div>
+      {/* Desktop Left: Spacer to center the rest nicely */}
+      <div className="hidden lg:block w-[120px]"></div>
 
       {/* Right Side: Admin Actions & Profile */}
       <div className="flex items-center justify-end shrink-0 gap-3 md:gap-4">

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import moonLogo from '../assets/moon.png';
-import TroubleshooterModal from './TroubleshooterModal'; // adjust the import path as needed
+import TroubleshooterModal from './TroubleshooterModal'; // adjust path if needed
 
 export default function Sidebar({ onOpenModal }: { onOpenModal?: () => void }) {
   const [showTroubleshooter, setShowTroubleshooter] = useState(false);
@@ -39,19 +39,32 @@ export default function Sidebar({ onOpenModal }: { onOpenModal?: () => void }) {
             <p className="text-[11px] font-bold text-slate-400 tracking-widest uppercase">User Experience</p>
           </div>
           <div className="flex flex-col gap-1 mb-8">
+            {/* Troubleshooter: opens its own modal */}
             <button
               onClick={() => setShowTroubleshooter(true)}
               className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group"
             >
               <i className="fas fa-tools w-5 text-center text-slate-400 group-hover:text-slate-600 transition-colors"></i> Troubleshooter
             </button>
-            <button className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group">
+            {/* Smart Help Center: opens project modal */}
+            <button
+              onClick={onOpenModal}
+              className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group"
+            >
               <i className="fas fa-book-open w-5 text-center text-slate-400 group-hover:text-slate-600 transition-colors"></i> Smart Help Center
             </button>
-            <button className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group">
+            {/* Error Decoder: opens troubleshooter modal */}
+            <button
+              onClick={() => setShowTroubleshooter(true)}
+              className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group"
+            >
               <i className="fas fa-comment-dots w-5 text-center text-slate-400 group-hover:text-slate-600 transition-colors"></i> Error Decoder
             </button>
-            <button className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group">
+            {/* Check Tools: opens project modal */}
+            <button
+              onClick={onOpenModal}
+              className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group"
+            >
               <i className="fas fa-search w-5 text-center text-slate-400 group-hover:text-slate-600 transition-colors"></i> Check Tools
             </button>
           </div>
@@ -61,19 +74,34 @@ export default function Sidebar({ onOpenModal }: { onOpenModal?: () => void }) {
             <p className="text-[11px] font-bold text-slate-400 tracking-widest uppercase">Admin Tools</p>
           </div>
           <div className="flex flex-col gap-1">
-            <button className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group">
+            <button
+              onClick={onOpenModal}
+              className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group"
+            >
               <i className="far fa-comment-alt w-5 text-center text-slate-400 group-hover:text-slate-600 transition-colors"></i> Reply Templates
             </button>
-            <button className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group">
+            <button
+              onClick={onOpenModal}
+              className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group"
+            >
               <i className="fas fa-cog w-5 text-center text-slate-400 group-hover:text-slate-600 transition-colors"></i> Project Settings
             </button>
-            <button className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group">
+            <button
+              onClick={onOpenModal}
+              className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group"
+            >
               <i className="fas fa-database w-5 text-center text-slate-400 group-hover:text-slate-600 transition-colors"></i> Knowledge Base
             </button>
-            <button className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group">
+            <button
+              onClick={onOpenModal}
+              className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group"
+            >
               <i className="fas fa-chart-bar w-5 text-center text-slate-400 group-hover:text-slate-600 transition-colors"></i> Analytics
             </button>
-            <button className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group">
+            <button
+              onClick={onOpenModal}
+              className="flex items-center gap-4 px-4 py-2.5 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl font-medium text-[14px] transition-colors text-left w-full group"
+            >
               <i className="far fa-user w-5 text-center text-slate-400 group-hover:text-slate-600 transition-colors"></i> Team Members
             </button>
           </div>
