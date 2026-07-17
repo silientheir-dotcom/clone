@@ -28,14 +28,6 @@ export default function Header({
       {/* Right Side: Admin Actions & Profile */}
       <div className="flex items-center justify-end shrink-0 gap-3 md:gap-4">
         
-        {/* Mobile Right Toggle */}
-        <button 
-          onClick={onToggleRightMenu}
-          className="lg:hidden p-2 text-slate-500 hover:bg-slate-50 rounded-full transition-colors"
-        >
-          <i className="fas fa-ellipsis-v text-lg"></i>
-        </button>
-
         {/* Desktop Buttons */}
         <div className="hidden md:flex items-center gap-3 border-r border-slate-200 pr-4 mr-1">
           <button className="flex items-center gap-2 px-4 py-2 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-lg text-[13px] font-semibold transition-colors border border-slate-200 shadow-sm">
@@ -46,14 +38,6 @@ export default function Header({
             <i className="fas fa-share-alt text-[14px]"></i> Share Help Center
           </button>
         </div>
-
-        {/* User Profile */}
-        <button className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
-          <div className="w-10 h-10 rounded-full bg-[#5B62F1] text-white flex items-center justify-center text-[13px] font-bold shadow-sm">
-            MR
-          </div>
-          <i className="fas fa-chevron-down text-[10px] text-slate-500 hidden sm:block"></i>
-        </button>
 
       </div>
     </header>

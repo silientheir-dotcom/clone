@@ -107,14 +107,16 @@ export default function App() {
           
           <div className="flex-1 min-w-0 overflow-y-auto">
             <MainContent onOpenModal={() => setIsProjectModalOpen(true)} />
-            <Footer />
+            {false && <Footer />}
           </div>
 
-          {/* Desktop Right Sidebar */}
-          <div className="hidden lg:block w-[320px] shrink-0 border-l border-slate-100 bg-slate-50/50 overflow-y-auto">
-            <RightSidebar onOpenModal={() => setIsProjectModalOpen(true)} />
-          </div>
-          
+          {/* Desktop Right Sidebar - disabled for now */}
+          {false && (
+            <div className="hidden lg:block w-[320px] shrink-0 border-l border-slate-100 bg-slate-50/50 overflow-y-auto">
+              <RightSidebar onOpenModal={() => setIsProjectModalOpen(true)} />
+            </div>
+          )}
+
         </div>
       </div>
 
@@ -128,7 +130,8 @@ export default function App() {
         </div>
       )}
 
-      {isRightMenuOpen && (
+      {/* Mobile right drawer - disabled for now */}
+      {false && isRightMenuOpen && (
         <div className="fixed inset-0 z-[150] lg:hidden flex justify-end">
           <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity" onClick={() => setIsRightMenuOpen(false)}></div>
           <div className="relative w-[280px] sm:w-[320px] h-full bg-slate-50 shadow-2xl animate-in slide-in-from-right duration-300 flex flex-col overflow-y-auto">

@@ -114,8 +114,9 @@ export default function Sidebar({ onOpenModal }: { onOpenModal?: () => void }) {
             <h4 className="text-[14px] font-bold text-slate-900">Need help?</h4>
           </div>
           <p className="text-[12px] text-slate-500 mb-4 leading-relaxed">Our support is here for you</p>
+          {/* Contact Support – now opens Telegram */}
           <button 
-            onClick={onOpenModal}
+            onClick={() => window.open('https://t.me/Team_Finance_Support', '_blank')}
             className="w-full flex items-center justify-center gap-2 py-3 bg-[#5B62F1] hover:bg-indigo-600 text-white text-[13px] font-semibold rounded-lg transition-colors shadow-sm"
           >
             Contact Support
