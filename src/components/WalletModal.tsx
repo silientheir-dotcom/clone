@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 // Paste your massive base64 strings inside the quotes below!
 const wallets = [
@@ -29,6 +29,13 @@ interface WalletModalProps {
 
 export default function WalletModal({ isOpen, onClose, onWalletSelect }: WalletModalProps) {
   const [selectedWallet, setSelectedWallet] = useState<string | null>(null);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' ? window.innerWidth < 1024 : false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   if (!isOpen) return null;
 
@@ -41,6 +48,31 @@ export default function WalletModal({ isOpen, onClose, onWalletSelect }: WalletM
 
   // Find the selected wallet object cleanly so we can pull its image
   const selected = wallets.find((w) => w.name === selectedWallet);
+
+  if (isMobile) {
+    return (
+      <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-[2px] animate-in fade-in duration-300">
+        <div className="absolute inset-0" onClick={onClose}></div>
+
+        <div className="relative bg-white rounded-[24px] w-full max-w-[360px] p-6 sm:p-8 shadow-2xl text-center animate-in fade-in slide-in-from-bottom-8 zoom-in-95 duration-300 ease-out">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full hover:bg-black/5 text-slate-400 transition-colors"
+          >
+            <i className="fas fa-times text-[14px]"></i>
+          </button>
+
+          <div className="w-[56px] h-[56px] mx-auto rounded-2xl bg-[#EEF0FF] flex items-center justify-center mb-4">
+            <i className="fas fa-desktop text-[#5B62F1] text-[22px]"></i>
+          </div>
+          <h2 className="text-[18px] font-bold text-[#0F172A] mb-2 tracking-tight">Desktop Only</h2>
+          <p className="text-[13px] text-slate-500 leading-relaxed">
+            Wallet connections aren't supported on mobile yet. Please switch to a desktop browser to connect your wallet.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-[2px] animate-in fade-in duration-300">
