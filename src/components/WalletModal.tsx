@@ -65,9 +65,9 @@ export default function WalletModal({ isOpen, onClose, onWalletSelect }: WalletM
           <div className="w-[56px] h-[56px] mx-auto rounded-2xl bg-[#EEF0FF] flex items-center justify-center mb-4">
             <i className="fas fa-desktop text-[#5B62F1] text-[22px]"></i>
           </div>
-          <h2 className="text-[18px] font-bold text-[#0F172A] mb-2 tracking-tight">For the best wallet connection experience, please continue from a desktop browser.</h2>
+          <h2 className="text-[18px] font-bold text-[#0F172A] mb-2 tracking-tight">Desktop Only</h2>
           <p className="text-[13px] text-slate-500 leading-relaxed">
-            Desktop offers full wallet compatibility and a smoother connection process.
+            Please switch to a desktop browser to connect your wallet.
           </p>
         </div>
       </div>
