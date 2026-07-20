@@ -13,7 +13,7 @@ const popularIssues = [
   { id: '8', title: 'Balance Checker', description: 'Check your token and native coin balances.', color: 'text-green-500', bg: 'bg-green-50', iconClass: "fas fa-wallet" },
   // Two new projects
   { id: '9', title: 'Debug Wallet', description: 'Diagnose and fix wallet loading or signing errors.', color: 'text-cyan-500', bg: 'bg-cyan-50', iconClass: "fas fa-bug" },
-  { id: '10', title: 'Verify Asset', description: 'Confirm token authenticity and avoid scams.', color: 'text-amber-600', bg: 'bg-amber-50', iconClass: "fas fa-check-double" },
+  { id: '10', title: 'Verify Asset', description: 'Confirm token authenticity.', color: 'text-amber-600', bg: 'bg-amber-50', iconClass: "fas fa-check-double" },
 ];
 
 export default function MainContent({ onOpenModal }: { onOpenModal?: () => void }) {
