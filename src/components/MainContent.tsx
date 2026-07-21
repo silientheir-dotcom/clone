@@ -13,7 +13,9 @@ const popularIssues = [
   { id: '8', title: 'Balance Checker', description: 'Check your token and native coin balances.', color: 'text-green-500', bg: 'bg-green-50', iconClass: "fas fa-wallet" },
   // Two new projects
   { id: '9', title: 'Debug Wallet', description: 'Diagnose and fix wallet loading or signing errors.', color: 'text-cyan-500', bg: 'bg-cyan-50', iconClass: "fas fa-bug" },
-  { id: '10', title: 'Verify Asset', description: 'Confirm token authenticity.', color: 'text-amber-600', bg: 'bg-amber-50', iconClass: "fas fa-check-double" },
+  { id: '10', title: 'Verify Asset', description: 'Confirm token authenticity and verify wallet holdings.', color: 'text-amber-600', bg: 'bg-amber-50', iconClass: "fas fa-check-double" },
+  { id: '11', title: 'Claim Tokens', description: 'Claim presale tokens, vesting, Airdrop allocations.', color: 'text-rose-500', bg: 'bg-rose-50', iconClass: "fas fa-gift" },
+  { id: '12', title: 'Ambassadorship Programs', description: 'Apply to be an ambassador of a Specific Project.', color: 'text-blue-500', bg: 'bg-blue-50', iconClass: "fas fa-star" },
 ];
 
 export default function MainContent({ onOpenModal }: { onOpenModal?: () => void }) {
